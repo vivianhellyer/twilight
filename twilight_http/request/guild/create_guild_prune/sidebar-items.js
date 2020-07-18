@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["CreateGuildPruneError","The error created when the guild prune can not be created as configured."]],"struct":[["CreateGuildPrune","Begin a guild prune."]]});

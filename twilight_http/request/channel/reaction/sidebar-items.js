@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["get_reactions",""]],"struct":[["CreateReaction","Create a reaction in a [`ChannelId`] on a [`MessageId`]."],["DeleteAllReaction","Remove all reactions of a specified emoji from a message."],["DeleteAllReactions","Delete all reactions by all users on a message."],["DeleteReaction","Delete one reaction by a user on a message."]]});

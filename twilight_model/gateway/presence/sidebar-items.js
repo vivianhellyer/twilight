@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["ActivityType",""],["Status",""],["UserOrId",""]],"struct":[["Activity",""],["ActivityAssets",""],["ActivityEmoji",""],["ActivityFlags",""],["ActivityParty",""],["ActivitySecrets",""],["ActivityTimestamps",""],["ClientStatus",""],["Presence",""],["PresenceMapDeserializer",""]]});

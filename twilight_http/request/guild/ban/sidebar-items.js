@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["create_ban",""]],"struct":[["DeleteBan","Remove a ban from a user in a guild."],["GetBan","Get information about a ban of a guild."],["GetBans","Retrieve the bans for a guild."]]});

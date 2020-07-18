@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ApplicationId",""],["AttachmentId",""],["AuditLogEntryId",""],["ChannelId",""],["EmojiId",""],["GenericId",""],["GuildId",""],["IntegrationId",""],["MessageId",""],["RoleId",""],["UserId",""],["WebhookId",""]]});

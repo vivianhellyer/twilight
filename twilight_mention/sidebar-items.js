@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["MentionFormat","Formatter to mention a resource that implements `std::fmt::Display`."]],"trait":[["Mention","Mention a resource, such as an emoji or user."]]});

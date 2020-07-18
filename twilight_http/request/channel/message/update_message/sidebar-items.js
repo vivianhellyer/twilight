@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["UpdateMessageError","The error created when a message can not be updated as configured."]],"struct":[["UpdateMessage","Update a message by [`ChannelId`] and [`MessageId`]."]]});

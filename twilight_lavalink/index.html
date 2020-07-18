@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `twilight_lavalink` crate."><meta name="keywords" content="rust, rustlang, rust-lang, twilight_lavalink"><title>twilight_lavalink - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../ayu.css" disabled ><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="shortcut icon" href="../favicon.ico"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../twilight_lavalink/index.html'><div class='logo-container'><img src='../rust-logo.png' alt='logo'></div></a><p class='location'>Crate twilight_lavalink</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all twilight_lavalink's items</p></a><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'twilight_lavalink', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/twilight_lavalink/lib.rs.html#1-95' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>twilight_lavalink</a></span></h1><div class='docblock'><h1 id="twilight-lavalink" class="section-header"><a href="#twilight-lavalink">twilight-lavalink</a></h1>
+<p><code>twilight-lavalink</code> is a client for <a href="https://github.com/Frederikam/Lavalink">Lavalink</a> as part of the twilight
+ecosystem.</p>
+<p>It includes support for managing multiple nodes, a player manager for
+conveniently using players to send events and retrieve information for each
+guild, and an HTTP module for creating requests using the <a href="https://crates.io/crates/http"><code>http</code></a> crate and
+providing models to deserialize their responses. It will automatically
+handle sending voice channel updates to Lavalink by processing events via
+the <a href="client/struct.Lavalink.html#method.process">client's <code>process</code> method</a>, which you must call
+with every Voice State Update and Voice Server Update you receive.</p>
+<h2 id="features" class="section-header"><a href="#features">Features</a></h2>
+<p>Included is the <code>http-support</code> feature.</p>
+<p>The <code>http-support</code> feature adds support for the <code>http</code> module to return
+request types from the <a href="https://crates.io/crates/http"><code>http</code></a> crate. This is enabled by default.</p>
+<h2 id="examples" class="section-header"><a href="#examples">Examples</a></h2>
+<p>Create a <a href="client/struct.Lavalink.html">client</a>, add a <a href="node/struct.Node.html">node</a>, and give events to the client to <a href="client/struct.Lavalink.html#method.process">process</a>
+events:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">futures_util</span>::<span class="ident">stream</span>::<span class="ident">StreamExt</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">convert</span>::<span class="ident">TryInto</span>,
+    <span class="ident">env</span>,
+    <span class="ident">error</span>::<span class="ident">Error</span>,
+    <span class="ident">future</span>::<span class="ident">Future</span>,
+    <span class="ident">net</span>::<span class="ident">SocketAddr</span>,
+    <span class="ident">str</span>::<span class="ident">FromStr</span>,
+};
+<span class="kw">use</span> <span class="ident">twilight_gateway</span>::{<span class="ident">Event</span>, <span class="ident">Shard</span>};
+<span class="kw">use</span> <span class="ident">twilight_http</span>::<span class="ident">Client</span> <span class="kw">as</span> <span class="ident">HttpClient</span>;
+<span class="kw">use</span> <span class="ident">twilight_lavalink</span>::{<span class="ident">http</span>::<span class="ident">LoadedTracks</span>, <span class="ident">model</span>::<span class="ident">Play</span>, <span class="ident">Lavalink</span>};
+<span class="kw">use</span> <span class="ident">twilight_model</span>::{
+    <span class="ident">channel</span>::<span class="ident">Message</span>,
+    <span class="ident">gateway</span>::<span class="ident">payload</span>::<span class="ident">MessageCreate</span>,
+};
+
+<span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">main</span>]</span>
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">main</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">env</span>::<span class="ident">var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">lavalink_host</span> <span class="op">=</span> <span class="ident">SocketAddr</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">env</span>::<span class="ident">var</span>(<span class="string">&quot;LAVALINK_HOST&quot;</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">lavalink_auth</span> <span class="op">=</span> <span class="ident">env</span>::<span class="ident">var</span>(<span class="string">&quot;LAVALINK_AUTHORIZATION&quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">shard_count</span> <span class="op">=</span> <span class="number">1u64</span>;
+
+    <span class="kw">let</span> <span class="ident">http</span> <span class="op">=</span> <span class="ident">HttpClient</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">token</span>);
+    <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">http</span>.<span class="ident">current_user</span>().<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">id</span>;
+
+    <span class="kw">let</span> <span class="ident">lavalink</span> <span class="op">=</span> <span class="ident">Lavalink</span>::<span class="ident">new</span>(<span class="ident">user_id</span>, <span class="ident">shard_count</span>);
+    <span class="ident">lavalink</span>.<span class="ident">add</span>(<span class="ident">lavalink_host</span>, <span class="ident">lavalink_auth</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">shard</span> <span class="op">=</span> <span class="ident">Shard</span>::<span class="ident">new</span>(<span class="ident">token</span>);
+    <span class="ident">shard</span>.<span class="ident">start</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">events</span> <span class="op">=</span> <span class="ident">shard</span>.<span class="ident">events</span>().<span class="kw">await</span>;
+
+    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">event</span>) <span class="op">=</span> <span class="ident">events</span>.<span class="ident">next</span>().<span class="kw">await</span> {
+        <span class="ident">lavalink</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+    }
+
+    <span class="prelude-val">Ok</span>(())
+}</pre></div>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
+<table><tr><td><code>pub use self::client::<a class="struct" href="../twilight_lavalink/client/struct.Lavalink.html" title="struct twilight_lavalink::client::Lavalink">Lavalink</a>;</code></td></tr><tr><td><code>pub use self::node::<a class="struct" href="../twilight_lavalink/node/struct.Node.html" title="struct twilight_lavalink::node::Node">Node</a>;</code></td></tr><tr><td><code>pub use self::player::<a class="struct" href="../twilight_lavalink/player/struct.PlayerManager.html" title="struct twilight_lavalink::player::PlayerManager">PlayerManager</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table><tr class='module-item'><td><a class="mod" href="client/index.html" title='twilight_lavalink::client mod'>client</a></td><td class='docblock-short'><p>Client to manage nodes and players.</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="http/index.html" title='twilight_lavalink::http mod'>http</a></td><td class='docblock-short'><p>Models to deserialize responses into and functions to create <code>http</code> crate
+requests.</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="model/index.html" title='twilight_lavalink::model mod'>model</a></td><td class='docblock-short'><p>Models to (de)serialize incoming/outgoing websocket events and HTTP
+responses.</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="node/index.html" title='twilight_lavalink::node mod'>node</a></td><td class='docblock-short'><p>Nodes for communicating with a Lavalink server.</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="player/index.html" title='twilight_lavalink::player mod'>player</a></td><td class='docblock-short'><p>Players containing information about active playing state within guilds and
+allowing you to send events to connected nodes.</p>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../";window.currentCrate = "twilight_lavalink";</script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

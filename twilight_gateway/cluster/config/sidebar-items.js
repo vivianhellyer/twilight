@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["ShardScheme","The method of sharding to use."]],"struct":[["ClusterConfig","Built configuration to be used for creating a [`Cluster`]."],["ClusterConfigBuilder","Builder to create a [`ClusterConfig`]."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["MessageActivityType",""],["MessageType",""]],"struct":[["Message",""],["MessageActivity",""],["MessageApplication",""],["MessageFlags",""],["MessageReaction",""],["MessageReference",""]]});

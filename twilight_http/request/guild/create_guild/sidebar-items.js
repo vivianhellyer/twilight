@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["CreateGuildError","The error returned when the guild can not be created as configured."]],"struct":[["CreateGuild","Create a new request to create a guild."]]});

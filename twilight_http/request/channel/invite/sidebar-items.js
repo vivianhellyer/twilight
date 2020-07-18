@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["CreateInvite","Create an invite, with options."],["DeleteInvite","Delete an invite by its code."],["GetChannelInvites","Get the invites for a guild channel."],["GetInvite","Get information about an invite by its code."]]});

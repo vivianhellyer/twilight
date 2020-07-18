@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["AuditLogChangeKey",""],["AuditLogEvent",""]],"struct":[["AuditLog",""],["AuditLogChange",""],["AuditLogEntry",""],["AuditLogOptionalEntryInfo",""],["PartialGuildIntegration",""]]});

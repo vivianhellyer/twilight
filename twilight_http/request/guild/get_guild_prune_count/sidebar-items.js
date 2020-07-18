@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["GetGuildPruneCountError","The error created when the guild prune count can not be requested as configured."]],"struct":[["GetGuildPruneCount","Get the counts of guild members to be pruned."]]});

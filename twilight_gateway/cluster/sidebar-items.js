@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["config",""],["error","The error type of why errors occur in the cluster module."]],"struct":[["Cluster","A manager for multiple shards."]]});

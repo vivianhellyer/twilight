@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Client","Twilight's http client."],["ClientBuilder","A builder for [`Client`]."],["Proxy","Configuration of a proxy that a `Client` should pass requests to."]]});

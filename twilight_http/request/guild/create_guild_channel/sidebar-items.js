@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["CreateGuildChannelError","Returned when the channel can not be created as configured."]],"struct":[["CreateGuildChannel","Create a new request to create a guild channel."]]});

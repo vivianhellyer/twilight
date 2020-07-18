@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Stage","The current connection stage of a [`Shard`]."],["StageConversionError","Reason for a failure while parsing a value into a [`Stage`]."]]});

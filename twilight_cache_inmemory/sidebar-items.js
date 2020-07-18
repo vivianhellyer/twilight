@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["InMemoryCacheError","Error type for [`InMemoryCache`] operations."]],"mod":[["config",""],["model","Models built for utilizing efficient caching."]],"struct":[["InMemoryCache","A thread-safe, in-memory-process cache of Discord data. It can be cloned and sent to other threads."]],"type":[["Result",""]]});

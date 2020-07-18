@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Channel",""],["ChannelType",""],["GuildChannel",""],["ReactionType",""],["WebhookType",""]],"mod":[["embed",""],["message",""],["permission_overwrite",""]],"struct":[["Attachment",""],["CategoryChannel",""],["ChannelMention",""],["Group",""],["PrivateChannel",""],["Reaction",""],["TextChannel",""],["VoiceChannel",""],["Webhook",""]]});
