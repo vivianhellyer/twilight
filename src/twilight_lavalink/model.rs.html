@@ -893,7 +893,7 @@
     <span class="ident">Event</span>,
     <span class="doccomment">/// Pause a player.</span>
     <span class="ident">Pause</span>,
-    <span class="doccomment">/// Add a track to a player&#39;s queue, optionally forcing it to play now.</span>
+    <span class="doccomment">/// Play a track.</span>
     <span class="ident">Play</span>,
     <span class="doccomment">/// An update about a player&#39;s current track.</span>
     <span class="ident">PlayerUpdate</span>,
@@ -925,7 +925,7 @@
         <span class="ident">Equalizer</span>(<span class="ident">Equalizer</span>),
         <span class="doccomment">/// Pause or unpause a player.</span>
         <span class="ident">Pause</span>(<span class="ident">Pause</span>),
-        <span class="doccomment">/// Add a track to the queue, optionally forcing it to play now.</span>
+        <span class="doccomment">/// Play a track.</span>
         <span class="ident">Play</span>(<span class="ident">Play</span>),
         <span class="doccomment">/// Seek a player&#39;s active track to a new position.</span>
         <span class="ident">Seek</span>(<span class="ident">Seek</span>),
@@ -1103,7 +1103,7 @@
         }
     }
 
-    <span class="doccomment">/// Add a track to the queue, optionally forcing it to play now.</span>
+    <span class="doccomment">/// Play a track, optionally specifying to not skip the current track.</span>
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
     <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
@@ -1120,8 +1120,8 @@
         <span class="doccomment">/// Whether or not to replace the currently playing track with this new</span>
         <span class="doccomment">/// track.</span>
         <span class="doccomment">///</span>
-        <span class="doccomment">/// Set to `true` to push this track to the end of the queue, or `false`</span>
-        <span class="doccomment">/// to replace the current track in-place.</span>
+        <span class="doccomment">/// Set to `true` to keep playing the current playing track, or `false`</span>
+        <span class="doccomment">/// to replace the current playing track with a new one.</span>
         <span class="kw">pub</span> <span class="ident">no_replace</span>: <span class="ident">bool</span>,
         <span class="doccomment">/// The opcode of the event.</span>
         <span class="kw">pub</span> <span class="ident">op</span>: <span class="ident">Opcode</span>,

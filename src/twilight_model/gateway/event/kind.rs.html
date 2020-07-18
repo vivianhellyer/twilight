@@ -53,11 +53,32 @@
 <span id="53">53</span>
 <span id="54">54</span>
 <span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
 </pre><div class="example-wrap"><pre class="rust ">
+<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+
 <span class="doccomment">/// The type of an event.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">EventType</span> {
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_BAN_ADD&quot;</span>)]</span>
     <span class="ident">BanAdd</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_BAN_REMOVE&quot;</span>)]</span>
     <span class="ident">BanRemove</span>,
     <span class="ident">ChannelCreate</span>,
     <span class="ident">ChannelDelete</span>,
@@ -76,9 +97,13 @@
     <span class="ident">GuildUpdate</span>,
     <span class="ident">InviteCreate</span>,
     <span class="ident">InviteDelete</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_MEMBER_ADD&quot;</span>)]</span>
     <span class="ident">MemberAdd</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_MEMBER_REMOVE&quot;</span>)]</span>
     <span class="ident">MemberRemove</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_MEMBER_UPDATE&quot;</span>)]</span>
     <span class="ident">MemberUpdate</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_MEMBERS_CHUNK&quot;</span>)]</span>
     <span class="ident">MemberChunk</span>,
     <span class="ident">MessageCreate</span>,
     <span class="ident">MessageDelete</span>,
@@ -86,14 +111,21 @@
     <span class="ident">MessageUpdate</span>,
     <span class="ident">PresenceUpdate</span>,
     <span class="ident">PresencesReplace</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;MESSAGE_REACTION_ADD&quot;</span>)]</span>
     <span class="ident">ReactionAdd</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;REACTION_REMOVE&quot;</span>)]</span>
     <span class="ident">ReactionRemove</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;REACTION_REMOVE_ALL&quot;</span>)]</span>
     <span class="ident">ReactionRemoveAll</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;REACTION_REMOVE_EMOJI&quot;</span>)]</span>
     <span class="ident">ReactionRemoveEmoji</span>,
     <span class="ident">Ready</span>,
     <span class="ident">Resumed</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_ROLE_CREATE&quot;</span>)]</span>
     <span class="ident">RoleCreate</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_ROLE_DELETE&quot;</span>)]</span>
     <span class="ident">RoleDelete</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_ROLE_UPDATE&quot;</span>)]</span>
     <span class="ident">RoleUpdate</span>,
     <span class="ident">ShardConnected</span>,
     <span class="ident">ShardConnecting</span>,

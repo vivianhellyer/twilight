@@ -5,15 +5,15 @@
     pub op: <a class="enum" href="../../twilight_lavalink/model/enum.Opcode.html" title="enum twilight_lavalink::model::Opcode">Opcode</a>,
     pub start_time: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>&gt;,
     pub track: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>,
-}</pre></div><div class='docblock'><p>Add a track to the queue, optionally forcing it to play now.</p>
+}</pre></div><div class='docblock'><p>Play a track, optionally specifying to not skip the current track.</p>
 </div><h2 id='fields' class='fields small-section-header'>
                        Fields (Non-exhaustive)<a href='#fields' class='anchor'></a></h2><div class='docblock non-exhaustive non-exhaustive-struct'>Non-exhaustive structs could have additional fields added in future. Therefore, non-exhaustive structs cannot be constructed in external crates using the traditional <code>Struct { .. }</code> syntax; cannot be matched against without a wildcard <code>..</code>; and struct update syntax will not work.</div><span id="structfield.end_time" class="structfield small-section-header"><a href="#structfield.end_time" class="anchor field"></a><code>end_time: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>&gt;</code></span><div class='docblock'><p>The position in milliseconds to end the track.</p>
 <p>This currently <a href="https://github.com/Frederikam/Lavalink/issues/179">does nothing</a> as of this writing.</p>
 </div><span id="structfield.guild_id" class="structfield small-section-header"><a href="#structfield.guild_id" class="anchor field"></a><code>guild_id: <a class="struct" href="../../twilight_model/id/struct.GuildId.html" title="struct twilight_model::id::GuildId">GuildId</a></code></span><div class='docblock'><p>The guild ID of the player.</p>
 </div><span id="structfield.no_replace" class="structfield small-section-header"><a href="#structfield.no_replace" class="anchor field"></a><code>no_replace: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><div class='docblock'><p>Whether or not to replace the currently playing track with this new
 track.</p>
-<p>Set to <code>true</code> to push this track to the end of the queue, or <code>false</code>
-to replace the current track in-place.</p>
+<p>Set to <code>true</code> to keep playing the current playing track, or <code>false</code>
+to replace the current playing track with a new one.</p>
 </div><span id="structfield.op" class="structfield small-section-header"><a href="#structfield.op" class="anchor field"></a><code>op: <a class="enum" href="../../twilight_lavalink/model/enum.Opcode.html" title="enum twilight_lavalink::model::Opcode">Opcode</a></code></span><div class='docblock'><p>The opcode of the event.</p>
 </div><span id="structfield.start_time" class="structfield small-section-header"><a href="#structfield.start_time" class="anchor field"></a><code>start_time: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>&gt;</code></span><div class='docblock'><p>The position in milliseconds to start the track from.</p>
 <p>For example, set to 5000 to start the track 5 seconds in.</p>
