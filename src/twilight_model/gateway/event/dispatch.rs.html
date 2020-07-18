@@ -222,10 +222,19 @@
 <span id="222">222</span>
 <span id="223">223</span>
 <span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">payload</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">EventType</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">de</span>::{<span class="ident">Deserialize</span>, <span class="ident">DeserializeSeed</span>, <span class="ident">Deserializer</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DeError</span>};
+<span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">de</span>::{<span class="ident">Deserialize</span>, <span class="ident">DeserializeSeed</span>, <span class="ident">Deserializer</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DeError</span>, <span class="ident">IgnoredAny</span>};
 
 <span class="doccomment">/// A dispatch event, containing information about a created guild, a member</span>
 <span class="doccomment">/// added, etc.</span>
@@ -234,7 +243,7 @@
 <span class="doccomment">/// [`DispatchEventWithTypeDeserializer`].</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`DispatchEventWithTypeDeserializer`]: struct.DispatchEventWithTypeDeserializer.html</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DispatchEvent</span> {
     <span class="ident">BanAdd</span>(<span class="ident">BanAdd</span>),
     <span class="ident">BanRemove</span>(<span class="ident">BanRemove</span>),
@@ -329,6 +338,7 @@
 <span class="doccomment">/// An event name is something like `&quot;CHANNEL_CREATE&quot;` or `&quot;GUILD_MEMBER_ADD&quot;`.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`DispatchEvent`]: enum.DispatchEvent.html</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DispatchEventWithTypeDeserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>);
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">DispatchEventWithTypeDeserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
@@ -427,9 +437,17 @@
             <span class="string">&quot;PRESENCE_UPDATE&quot;</span> <span class="op">=&gt;</span> {
                 <span class="ident">DispatchEvent</span>::<span class="ident">PresenceUpdate</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">PresenceUpdate</span>::<span class="ident">deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;PRESENCES_REPLACE&quot;</span> <span class="op">=&gt;</span> <span class="ident">DispatchEvent</span>::<span class="ident">PresencesReplace</span>,
+            <span class="string">&quot;PRESENCES_REPLACE&quot;</span> <span class="op">=&gt;</span> {
+                <span class="ident">deserializer</span>.<span class="ident">deserialize_ignored_any</span>(<span class="ident">IgnoredAny</span>)<span class="question-mark">?</span>;
+
+                <span class="ident">DispatchEvent</span>::<span class="ident">PresencesReplace</span>
+            }
             <span class="string">&quot;READY&quot;</span> <span class="op">=&gt;</span> <span class="ident">DispatchEvent</span>::<span class="ident">Ready</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">Ready</span>::<span class="ident">deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)),
-            <span class="string">&quot;RESUMED&quot;</span> <span class="op">=&gt;</span> <span class="ident">DispatchEvent</span>::<span class="ident">Resumed</span>,
+            <span class="string">&quot;RESUMED&quot;</span> <span class="op">=&gt;</span> {
+                <span class="ident">deserializer</span>.<span class="ident">deserialize_ignored_any</span>(<span class="ident">IgnoredAny</span>)<span class="question-mark">?</span>;
+
+                <span class="ident">DispatchEvent</span>::<span class="ident">Resumed</span>
+            }
             <span class="string">&quot;TYPING_START&quot;</span> <span class="op">=&gt;</span> {
                 <span class="ident">DispatchEvent</span>::<span class="ident">TypingStart</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">TypingStart</span>::<span class="ident">deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
             }
