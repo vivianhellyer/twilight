@@ -43,10 +43,8 @@
 <span id="43">43</span>
 <span id="44">44</span>
 <span id="45">45</span>
-<span id="46">46</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">request</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">channel</span>::<span class="ident">ReactionType</span>,
     <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">MessageId</span>},
@@ -82,7 +80,7 @@
             <span class="ident">Route</span>::<span class="ident">DeleteMessageSpecficReaction</span> {
                 <span class="ident">channel_id</span>: <span class="self">self</span>.<span class="ident">channel_id</span>.<span class="number">0</span>,
                 <span class="ident">message_id</span>: <span class="self">self</span>.<span class="ident">message_id</span>.<span class="number">0</span>,
-                <span class="ident">emoji</span>: <span class="ident">Cow</span>::<span class="ident">Owned</span>(<span class="self">self</span>.<span class="ident">emoji</span>.<span class="ident">clone</span>()),
+                <span class="ident">emoji</span>: <span class="self">self</span>.<span class="ident">emoji</span>.<span class="ident">clone</span>(),
             },
         ))));
 

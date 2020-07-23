@@ -92,10 +92,10 @@
 <span id="92">92</span>
 <span id="93">93</span>
 <span id="94">94</span>
+<span id="95">95</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">request</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">borrow</span>::<span class="ident">Cow</span>,
     <span class="ident">error</span>::<span class="ident">Error</span>,
     <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
 };
@@ -122,14 +122,14 @@
 <span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">GetGuildPruneCountError</span> {}
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-<span class="kw">struct</span> <span class="ident">GetGuildPruneCountFields</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">struct</span> <span class="ident">GetGuildPruneCountFields</span> {
     <span class="ident">days</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
-    <span class="ident">include_roles</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">RoleId</span>]<span class="op">&gt;&gt;</span>,
+    <span class="ident">include_roles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// Get the counts of guild members to be pruned.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GetGuildPruneCount</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">fields</span>: <span class="ident">GetGuildPruneCountFields</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+    <span class="ident">fields</span>: <span class="ident">GetGuildPruneCountFields</span>,
     <span class="ident">fut</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Pending</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">GuildPrune</span><span class="op">&gt;&gt;</span>,
     <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
     <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
@@ -167,8 +167,10 @@
     }
 
     <span class="doccomment">/// List of roles to include when calculating prune count</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">include_roles</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">roles</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">RoleId</span>]<span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">include_roles</span>.<span class="ident">replace</span>(<span class="ident">roles</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">include_roles</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">roles</span>: <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">RoleId</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">roles</span> <span class="op">=</span> <span class="ident">roles</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="number">0</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;&gt;</span>();
+
+        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">include_roles</span> <span class="op">=</span> <span class="ident">roles</span>;
 
         <span class="self">self</span>
     }
@@ -178,7 +180,7 @@
             <span class="ident">Route</span>::<span class="ident">GetGuildPruneCount</span> {
                 <span class="ident">days</span>: <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">days</span>,
                 <span class="ident">guild_id</span>: <span class="self">self</span>.<span class="ident">guild_id</span>.<span class="number">0</span>,
-                <span class="ident">include_roles</span>: <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">include_roles</span>.<span class="ident">take</span>().<span class="ident">as_deref</span>(),
+                <span class="ident">include_roles</span>: <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">include_roles</span>.<span class="ident">clone</span>(),
             },
         ))));
 

@@ -1607,12 +1607,6 @@
 <span id="1607">1607</span>
 <span id="1608">1608</span>
 <span id="1609">1609</span>
-<span id="1610">1610</span>
-<span id="1611">1611</span>
-<span id="1612">1612</span>
-<span id="1613">1613</span>
-<span id="1614">1614</span>
-<span id="1615">1615</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">mod</span> <span class="ident">builder</span>;
 
@@ -1634,7 +1628,6 @@
 <span class="kw">use</span> <span class="ident">reqwest</span>::{<span class="ident">header</span>::<span class="ident">HeaderValue</span>, <span class="ident">Body</span>, <span class="ident">Client</span> <span class="kw">as</span> <span class="ident">ReqwestClient</span>, <span class="ident">Response</span>, <span class="ident">StatusCode</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">de</span>::<span class="ident">DeserializeOwned</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">borrow</span>::<span class="ident">Cow</span>,
     <span class="ident">convert</span>::<span class="ident">TryFrom</span>,
     <span class="ident">fmt</span>::{<span class="ident">Debug</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
     <span class="ident">result</span>::<span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">StdResult</span>,
@@ -2103,11 +2096,11 @@
     }
 
     <span class="doccomment">/// Changes the user&#39;s nickname in a guild.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update_current_user_nick</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update_current_user_nick</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
-        <span class="ident">nick</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">UpdateCurrentUserNick</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">nick</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">UpdateCurrentUserNick</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="ident">UpdateCurrentUserNick</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">guild_id</span>, <span class="ident">nick</span>)
     }
 
@@ -2170,12 +2163,12 @@
     <span class="doccomment">/// discord docs] for more information about image data.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [the discord docs]: https://discord.com/developers/docs/reference#image-data</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_emoji</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_emoji</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
-        <span class="ident">name</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
-        <span class="ident">image</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">CreateEmoji</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">name</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="ident">image</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">CreateEmoji</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="ident">CreateEmoji</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">guild_id</span>, <span class="ident">name</span>, <span class="ident">image</span>)
     }
 
@@ -2242,10 +2235,10 @@
     <span class="doccomment">/// Returns [`CreateGuildError::NameInvalid`] if the name length is too short or too long.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`CreateGuildError::NameInvalid`]: ../request/guild/enum.CreateGuildError.html#variant.NameInvalid</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_guild</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
-        <span class="ident">name</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">StdResult</span><span class="op">&lt;</span><span class="ident">CreateGuild</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">CreateGuildError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_guild</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">name</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">StdResult</span><span class="op">&lt;</span><span class="ident">CreateGuild</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">CreateGuildError</span><span class="op">&gt;</span> {
         <span class="ident">CreateGuild</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">name</span>)
     }
 
@@ -2293,11 +2286,11 @@
     <span class="doccomment">/// [`CreateGuildChannelError::NameInvalid`]: ../request/guild/create_guild_channel/enum.CreateGuildChannelError.html#variant.NameInvalid</span>
     <span class="doccomment">/// [`CreateGuildChannelError::RateLimitPerUserInvalid`]: ../request/guild/create_guild_channel/enum.CreateGuildChannelError.html#variant.RateLimitPerUserInvalid</span>
     <span class="doccomment">/// [`CreateGuildChannelError::TopicInvalid`]: ../request/guild/create_guild_channel/enum.CreateGuildChannelError.html#variant.TopicInvalid</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_guild_channel</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_guild_channel</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
-        <span class="ident">name</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">StdResult</span><span class="op">&lt;</span><span class="ident">CreateGuildChannel</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">CreateGuildChannelError</span><span class="op">&gt;</span> {
+        <span class="ident">name</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">StdResult</span><span class="op">&lt;</span><span class="ident">CreateGuildChannel</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">CreateGuildChannelError</span><span class="op">&gt;</span> {
         <span class="ident">CreateGuildChannel</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">guild_id</span>, <span class="ident">name</span>)
     }
 
@@ -2336,12 +2329,12 @@
     <span class="doccomment">/// Refer to [the discord docs] for more information.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [the discord docs]: https://discord.com/developers/docs/resources/guild#create-guild-integration</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_guild_integration</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_guild_integration</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
         <span class="ident">integration_id</span>: <span class="ident">IntegrationId</span>,
-        <span class="ident">kind</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">CreateGuildIntegration</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">kind</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">CreateGuildIntegration</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="ident">CreateGuildIntegration</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">guild_id</span>, <span class="ident">integration_id</span>, <span class="ident">kind</span>)
     }
 
@@ -2517,7 +2510,7 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`with_counts`]: ../request/channel/invite/struct.GetInvite.html#method.with_counts</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invite</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">code</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>) <span class="op">-&gt;</span> <span class="ident">GetInvite</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invite</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">code</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">GetInvite</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="ident">GetInvite</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">code</span>)
     }
 
@@ -2545,7 +2538,7 @@
     }
 
     <span class="doccomment">/// Delete an invite by its code.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">delete_invite</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">code</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>) <span class="op">-&gt;</span> <span class="ident">DeleteInvite</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">delete_invite</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">code</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">DeleteInvite</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="ident">DeleteInvite</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">code</span>)
     }
 
@@ -2618,11 +2611,11 @@
     <span class="doccomment">/// [`ChannelId`]: ../../twilight_model/id/struct.ChannelId.html</span>
     <span class="doccomment">/// [`MessageId`]: ../../twilight_model/id/struct.MessageId.html</span>
     <span class="doccomment">/// [the discord docs]: https://discord.com/developers/docs/resources/channel#bulk-delete-messages</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">delete_messages</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">delete_messages</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>,
-        <span class="ident">message_ids</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">MessageId</span>]<span class="op">&gt;&gt;</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">DeleteMessages</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">message_ids</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MessageId</span><span class="op">&gt;&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">DeleteMessages</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="ident">DeleteMessages</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">channel_id</span>, <span class="ident">message_ids</span>)
     }
 
@@ -2644,7 +2637,7 @@
     <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error + Send + Sync&gt;&gt; {</span>
     <span class="doccomment">/// let client = Client::new(&quot;my token&quot;);</span>
     <span class="doccomment">/// client.update_message(ChannelId(1), MessageId(2))</span>
-    <span class="doccomment">///     .content(Some(&quot;test update&quot;.into()))?</span>
+    <span class="doccomment">///     .content(&quot;test update&quot;.to_owned())?</span>
     <span class="doccomment">///     .await?;</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
@@ -2694,12 +2687,12 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This endpoint is limited to 100 users maximum, so if a message has more than 100 reactions,</span>
     <span class="doccomment">/// requests must be chained until all reactions are retireved.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reactions</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reactions</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>,
         <span class="ident">message_id</span>: <span class="ident">MessageId</span>,
-        <span class="ident">emoji</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">GetReactions</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">emoji</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">GetReactions</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="ident">GetReactions</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">channel_id</span>, <span class="ident">message_id</span>, <span class="ident">emoji</span>)
     }
 
@@ -2834,11 +2827,11 @@
     <span class="doccomment">/// Modify the position of the roles.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The minimum amount of roles to modify, is a swap between two roles.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update_role_positions</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update_role_positions</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
-        <span class="ident">roles</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [(<span class="ident">RoleId</span>, <span class="ident">u64</span>)]<span class="op">&gt;&gt;</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">UpdateRolePositions</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">roles</span>: <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">RoleId</span>, <span class="ident">u64</span>)<span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">UpdateRolePositions</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="ident">UpdateRolePositions</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">guild_id</span>, <span class="ident">roles</span>)
     }
 
@@ -2875,11 +2868,11 @@
     <span class="doccomment">///     .await?;</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_webhook</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_webhook</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>,
-        <span class="ident">name</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">CreateWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">name</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">CreateWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="ident">CreateWebhook</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">channel_id</span>, <span class="ident">name</span>)
     }
 
@@ -2895,7 +2888,7 @@
     <span class="doccomment">/// Returns [`UrlError::SegmentMissing`] if the URL can not be parsed.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`UrlError::SegmentMissing`]: ../error/enum.UrlError.html#variant.SegmentMissing</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">delete_webhook_from_url</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">url</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DeleteWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">delete_webhook_from_url</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DeleteWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;&gt;</span> {
         <span class="kw">let</span> (<span class="ident">id</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">parse_webhook_url</span>(<span class="ident">url</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">delete_webhook</span>(<span class="ident">id</span>))
     }
@@ -2912,17 +2905,17 @@
     <span class="doccomment">/// Returns [`UrlError::SegmentMissing`] if the URL can not be parsed.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`UrlError::SegmentMissing`]: ../error/enum.UrlError.html#variant.SegmentMissing</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update_webhook_from_url</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">UpdateWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update_webhook_from_url</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">UpdateWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;&gt;</span> {
         <span class="kw">let</span> (<span class="ident">id</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">parse_webhook_url</span>(<span class="ident">url</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">update_webhook</span>(<span class="ident">id</span>))
     }
 
     <span class="doccomment">/// Update a webhook, with a token, by ID.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update_webhook_with_token</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update_webhook_with_token</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">webhook_id</span>: <span class="ident">WebhookId</span>,
-        <span class="ident">token</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">UpdateWebhookWithToken</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">token</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">UpdateWebhookWithToken</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="ident">UpdateWebhookWithToken</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">webhook_id</span>, <span class="ident">token</span>)
     }
 
@@ -2933,10 +2926,10 @@
     <span class="doccomment">/// Returns [`UrlError::SegmentMissing`] if the URL can not be parsed.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`UrlError::SegmentMissing`]: ../error/enum.UrlError.html#variant.SegmentMissing</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update_webhook_with_token_from_url</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
-        <span class="ident">url</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">UpdateWebhookWithToken</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update_webhook_with_token_from_url</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">url</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">UpdateWebhookWithToken</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;&gt;</span> {
         <span class="kw">let</span> (<span class="ident">id</span>, <span class="ident">token</span>) <span class="op">=</span> <span class="ident">parse_webhook_url</span>(<span class="ident">url</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">update_webhook_with_token</span>(<span class="ident">id</span>, <span class="ident">token</span>.<span class="ident">ok_or</span>(<span class="ident">UrlError</span>::<span class="ident">SegmentMissing</span>)<span class="question-mark">?</span>))
     }
@@ -2966,11 +2959,11 @@
     <span class="doccomment">/// [`content`]: ../request/channel/webhook/struct.ExecuteWebhook.html#method.content</span>
     <span class="doccomment">/// [`embeds`]: ../request/channel/webhook/struct.ExecuteWebhook.html#method.embeds</span>
     <span class="doccomment">/// [`file`]: ../request/channel/webhook/struct.ExecuteWebhook.html#method.file</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">execute_webhook</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">execute_webhook</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">webhook_id</span>: <span class="ident">WebhookId</span>,
-        <span class="ident">token</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">ExecuteWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">token</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">ExecuteWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="ident">ExecuteWebhook</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">webhook_id</span>, <span class="ident">token</span>)
     }
 
@@ -2981,7 +2974,7 @@
     <span class="doccomment">/// Returns [`UrlError::SegmentMissing`] if the URL can not be parsed.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`UrlError::SegmentMissing`]: ../error/enum.UrlError.html#variant.SegmentMissing</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">execute_webhook_from_url</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">url</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ExecuteWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">execute_webhook_from_url</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ExecuteWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;&gt;</span> {
         <span class="kw">let</span> (<span class="ident">id</span>, <span class="ident">token</span>) <span class="op">=</span> <span class="ident">parse_webhook_url</span>(<span class="ident">url</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">execute_webhook</span>(<span class="ident">id</span>, <span class="ident">token</span>.<span class="ident">ok_or</span>(<span class="ident">UrlError</span>::<span class="ident">SegmentMissing</span>)<span class="question-mark">?</span>))
     }
@@ -3174,9 +3167,9 @@
 
 <span class="comment">// parse the webhook id and token, if it exists in the string</span>
 <span class="kw">fn</span> <span class="ident">parse_webhook_url</span>(
-    <span class="ident">webhook_uri</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-) <span class="op">-&gt;</span> <span class="ident">std</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">WebhookId</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>), <span class="ident">UrlError</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="ident">webhook_uri</span>)<span class="question-mark">?</span>;
+    <span class="ident">url</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>,
+) <span class="op">-&gt;</span> <span class="ident">std</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">WebhookId</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>), <span class="ident">UrlError</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="ident">url</span>.<span class="ident">as_ref</span>())<span class="question-mark">?</span>;
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">segments</span> <span class="op">=</span> <span class="ident">url</span>.<span class="ident">path_segments</span>().<span class="ident">ok_or</span>(<span class="ident">UrlError</span>::<span class="ident">SegmentMissing</span>)<span class="question-mark">?</span>;
 
     <span class="ident">segments</span>
@@ -3188,14 +3181,9 @@
         .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="string">&quot;webhooks&quot;</span>)
         .<span class="ident">ok_or</span>(<span class="ident">UrlError</span>::<span class="ident">SegmentMissing</span>)<span class="question-mark">?</span>;
     <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">segments</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">UrlError</span>::<span class="ident">SegmentMissing</span>)<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">segments</span>.<span class="ident">next</span>();
 
-    <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">segments</span>.<span class="ident">next</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
-        <span class="kw">let</span> <span class="ident">half</span> <span class="op">=</span> <span class="ident">webhook_uri</span>.<span class="ident">split</span>(<span class="string">&quot;api/webhooks/&quot;</span>).<span class="ident">nth</span>(<span class="number">1</span>)<span class="question-mark">?</span>;
-
-        <span class="ident">half</span>.<span class="ident">split</span>(<span class="string">&#39;/&#39;</span>).<span class="ident">nth</span>(<span class="number">1</span>)
-    });
-
-    <span class="prelude-val">Ok</span>((<span class="ident">WebhookId</span>(<span class="ident">id</span>.<span class="ident">parse</span>()<span class="question-mark">?</span>), <span class="ident">token</span>))
+    <span class="prelude-val">Ok</span>((<span class="ident">WebhookId</span>(<span class="ident">id</span>.<span class="ident">parse</span>()<span class="question-mark">?</span>), <span class="ident">token</span>.<span class="ident">map</span>(<span class="ident">String</span>::<span class="ident">from</span>)))
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>

@@ -1191,7 +1191,7 @@
     <span class="doccomment">/// [`Error::PayloadInvalid`]: ../enum.Error.html#variant.PayloadInvalid</span>
     <span class="doccomment">/// [`Error::PayloadSerialization`]: ../enum.Error.html#variant.PayloadSerialization</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unsafe_code</span>)]</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serde_json&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;simd-json&quot;</span>)))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;simd-json&quot;</span>))]</span>
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">parse_gateway_event</span>(<span class="ident">json</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">GatewayEvent</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">de</span>::<span class="ident">DeserializeSeed</span>;
         <span class="kw">use</span> <span class="ident">serde_json</span>::<span class="ident">Deserializer</span>;
@@ -1236,9 +1236,9 @@
         <span class="kw">use</span> <span class="ident">twilight_model</span>::<span class="ident">gateway</span>::<span class="ident">event</span>::<span class="ident">gateway</span>::<span class="ident">GatewayEventDeserializerOwned</span>;
 
         <span class="kw">let</span> <span class="ident">gateway_deserializer</span> <span class="op">=</span>
-            <span class="ident">GatewayEventDeserializerOwned</span>::<span class="ident">from_json</span>(<span class="ident">json</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">PayloadInvalid</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer</span>::<span class="ident">from_slice</span>(<span class="kw">unsafe</span> { <span class="ident">json</span>.<span class="ident">as_bytes_mut</span>() })
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">PayloadInvalid</span>)<span class="question-mark">?</span>;
+            <span class="ident">GatewayEventDeserializerOwned</span>::<span class="ident">from_json</span>(<span class="ident">json</span>).<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">Error</span>::<span class="ident">PayloadInvalid</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span>
+            <span class="ident">Deserializer</span>::<span class="ident">from_slice</span>(<span class="ident">json</span>.<span class="ident">as_bytes_mut</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">PayloadInvalid</span>)<span class="question-mark">?</span>;
 
         <span class="ident">gateway_deserializer</span>
             .<span class="ident">deserialize</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">json_deserializer</span>)

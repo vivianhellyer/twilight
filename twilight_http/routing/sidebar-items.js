@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Path","An enum representing a path, most useful for ratelimiting implementations."],["PathParseError",""],["Route","Route information to add a role to guild member."]]});
+initSidebarItems({"enum":[["Path","An enum representing a path, most useful for ratelimiting implementations."],["PathParseError",""],["Route",""]]});
