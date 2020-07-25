@@ -325,15 +325,13 @@
 <span id="325">325</span>
 <span id="326">326</span>
 <span id="327">327</span>
-<span id="328">328</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">config</span>::{<span class="ident">ClusterConfig</span>, <span class="ident">ShardScheme</span>},
     <span class="ident">error</span>::{<span class="ident">Error</span>, <span class="prelude-ty">Result</span>},
 };
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">shard</span>::<span class="ident">ResumeSession</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">shard</span>::{<span class="ident">Information</span>, <span class="ident">Shard</span>},
+    <span class="ident">shard</span>::{<span class="ident">Information</span>, <span class="ident">ResumeSession</span>, <span class="ident">Shard</span>},
     <span class="ident">EventTypeFlags</span>,
 };
 <span class="kw">use</span> <span class="ident">futures_util</span>::{

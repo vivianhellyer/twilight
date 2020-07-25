@@ -267,8 +267,6 @@
 <span id="267">267</span>
 <span id="268">268</span>
 <span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">wildcard_imports</span>)]</span>
 
@@ -279,12 +277,10 @@
 <span class="kw">mod</span> <span class="ident">kind</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{
-    <span class="ident">dispatch</span>::<span class="ident">DispatchEvent</span>,
+    <span class="ident">dispatch</span>::{<span class="ident">DispatchEvent</span>, <span class="ident">DispatchEventWithTypeDeserializer</span>},
     <span class="ident">gateway</span>::{<span class="ident">GatewayEvent</span>, <span class="ident">GatewayEventDeserializer</span>},
     <span class="ident">kind</span>::<span class="ident">EventType</span>,
 };
-
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">dispatch</span>::<span class="ident">DispatchEventWithTypeDeserializer</span>;
 
 <span class="kw">use</span> <span class="self">self</span>::<span class="ident">shard</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">payload</span>::<span class="kw-2">*</span>;

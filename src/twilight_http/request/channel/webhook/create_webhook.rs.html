@@ -93,9 +93,7 @@
 <span id="93">93</span>
 <span id="94">94</span>
 <span id="95">95</span>
-<span id="96">96</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">json_to_vec</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">request</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{<span class="ident">channel</span>::<span class="ident">Webhook</span>, <span class="ident">id</span>::<span class="ident">ChannelId</span>};
 
@@ -169,7 +167,7 @@
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">reason</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">reason</span> {
             <span class="kw">let</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">audit_header</span>(<span class="kw-2">&amp;</span><span class="ident">reason</span>)<span class="question-mark">?</span>;
             <span class="ident">Request</span>::<span class="ident">from</span>((
-                <span class="ident">json_to_vec</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">fields</span>)<span class="question-mark">?</span>,
+                <span class="kw">crate</span>::<span class="ident">json_to_vec</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">fields</span>)<span class="question-mark">?</span>,
                 <span class="ident">headers</span>,
                 <span class="ident">Route</span>::<span class="ident">CreateWebhook</span> {
                     <span class="ident">channel_id</span>: <span class="self">self</span>.<span class="ident">channel_id</span>.<span class="number">0</span>,
@@ -177,7 +175,7 @@
             ))
         } <span class="kw">else</span> {
             <span class="ident">Request</span>::<span class="ident">from</span>((
-                <span class="ident">json_to_vec</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">fields</span>)<span class="question-mark">?</span>,
+                <span class="kw">crate</span>::<span class="ident">json_to_vec</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">fields</span>)<span class="question-mark">?</span>,
                 <span class="ident">Route</span>::<span class="ident">CreateWebhook</span> {
                     <span class="ident">channel_id</span>: <span class="self">self</span>.<span class="ident">channel_id</span>.<span class="number">0</span>,
                 },

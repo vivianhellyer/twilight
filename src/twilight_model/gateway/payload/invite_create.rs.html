@@ -25,10 +25,14 @@
 <span id="25">25</span>
 <span id="26">26</span>
 <span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">UserId</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">invite</span>::<span class="ident">TargetUserType</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">user</span>::<span class="ident">User</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">UserId</span>},
+    <span class="ident">invite</span>::<span class="ident">TargetUserType</span>,
+    <span class="ident">user</span>::<span class="ident">User</span>,
+};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>

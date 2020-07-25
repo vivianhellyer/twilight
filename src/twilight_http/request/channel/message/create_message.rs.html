@@ -228,10 +228,8 @@
 <span id="228">228</span>
 <span id="229">229</span>
 <span id="230">230</span>
-<span id="231">231</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">allowed_mentions</span>::{<span class="ident">AllowedMentions</span>, <span class="ident">AllowedMentionsBuilder</span>, <span class="ident">Unspecified</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">json_to_vec</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">request</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">reqwest</span>::{
     <span class="ident">multipart</span>::{<span class="ident">Form</span>, <span class="ident">Part</span>},
@@ -434,7 +432,7 @@
         <span class="self">self</span>.<span class="ident">fut</span>.<span class="ident">replace</span>(<span class="ident">Box</span>::<span class="ident">pin</span>(<span class="self">self</span>.<span class="ident">http</span>.<span class="ident">request</span>(
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">attachments</span>.<span class="ident">is_empty</span>() {
                 <span class="ident">Request</span>::<span class="ident">from</span>((
-                    <span class="ident">json_to_vec</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">fields</span>)<span class="question-mark">?</span>,
+                    <span class="kw">crate</span>::<span class="ident">json_to_vec</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">fields</span>)<span class="question-mark">?</span>,
                     <span class="ident">Route</span>::<span class="ident">CreateMessage</span> {
                         <span class="ident">channel_id</span>: <span class="self">self</span>.<span class="ident">channel_id</span>.<span class="number">0</span>,
                     },
@@ -447,7 +445,7 @@
                 }
 
                 <span class="ident">Request</span>::<span class="ident">from</span>((
-                    <span class="ident">json_to_vec</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">fields</span>)<span class="question-mark">?</span>,
+                    <span class="kw">crate</span>::<span class="ident">json_to_vec</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">fields</span>)<span class="question-mark">?</span>,
                     <span class="ident">form</span>,
                     <span class="ident">Route</span>::<span class="ident">CreateMessage</span> {
                         <span class="ident">channel_id</span>: <span class="self">self</span>.<span class="ident">channel_id</span>.<span class="number">0</span>,

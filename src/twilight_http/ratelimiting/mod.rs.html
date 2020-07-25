@@ -120,8 +120,8 @@
     <span class="ident">headers</span>::<span class="ident">RatelimitHeaders</span>,
 };
 
-<span class="kw">use</span> <span class="self">self</span>::<span class="ident">bucket</span>::{<span class="ident">Bucket</span>, <span class="ident">BucketQueueTask</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">routing</span>::<span class="ident">Path</span>;
+<span class="kw">use</span> <span class="ident">bucket</span>::{<span class="ident">Bucket</span>, <span class="ident">BucketQueueTask</span>};
 <span class="kw">use</span> <span class="ident">futures_channel</span>::<span class="ident">oneshot</span>::{<span class="self">self</span>, <span class="ident">Receiver</span>, <span class="ident">Sender</span>};
 <span class="kw">use</span> <span class="ident">futures_util</span>::<span class="ident">lock</span>::<span class="ident">Mutex</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{

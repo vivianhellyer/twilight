@@ -475,17 +475,15 @@
 <span id="475">475</span>
 <span id="476">476</span>
 <span id="477">477</span>
-<span id="478">478</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">gateway</span>::<span class="ident">presence</span>::{<span class="ident">Presence</span>, <span class="ident">PresenceMapDeserializer</span>},
     <span class="ident">guild</span>::<span class="ident">member</span>::{<span class="ident">Member</span>, <span class="ident">MemberMapDeserializer</span>},
     <span class="ident">id</span>::{<span class="ident">GuildId</span>, <span class="ident">UserId</span>},
 };
-<span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">Serialize</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{
     <span class="ident">de</span>::{<span class="ident">Deserializer</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DeError</span>, <span class="ident">IgnoredAny</span>, <span class="ident">MapAccess</span>, <span class="ident">Visitor</span>},
-    <span class="ident">Deserialize</span>,
+    <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>,
 };
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections</span>::<span class="ident">HashMap</span>,

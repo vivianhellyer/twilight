@@ -342,15 +342,19 @@
 <span id="342">342</span>
 <span id="343">343</span>
 <span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">error</span>::{<span class="ident">Error</span>, <span class="prelude-ty">Result</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">shard</span>::<span class="ident">ResumeSession</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">queue</span>::{<span class="ident">LocalQueue</span>, <span class="ident">Queue</span>},
-    <span class="ident">shard</span>::<span class="ident">config</span>::{<span class="ident">ShardConfig</span>, <span class="ident">ShardConfigBuilder</span>},
+    <span class="ident">shard</span>::{
+        <span class="ident">config</span>::{<span class="ident">ShardConfig</span>, <span class="ident">ShardConfigBuilder</span>},
+        <span class="ident">ResumeSession</span>,
+    },
 };
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">collections</span>::<span class="ident">HashMap</span>,
     <span class="ident">convert</span>::<span class="ident">TryFrom</span>,
     <span class="ident">ops</span>::{<span class="ident">Bound</span>, <span class="ident">RangeBounds</span>},
     <span class="ident">sync</span>::<span class="ident">Arc</span>,

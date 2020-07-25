@@ -358,6 +358,7 @@
 <span id="358">358</span>
 <span id="359">359</span>
 <span id="360">360</span>
+<span id="361">361</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">config</span>::<span class="ident">ShardConfig</span>,
@@ -368,20 +369,21 @@
     <span class="ident">stage</span>::<span class="ident">Stage</span>,
 };
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">listener</span>::<span class="ident">Listeners</span>, <span class="ident">EventTypeFlags</span>};
+<span class="kw">use</span> <span class="ident">async_tungstenite</span>::<span class="ident">tungstenite</span>::{
+    <span class="ident">protocol</span>::{<span class="ident">frame</span>::<span class="ident">coding</span>::<span class="ident">CloseCode</span>, <span class="ident">CloseFrame</span>},
+    <span class="ident">Message</span>,
+};
 <span class="kw">use</span> <span class="ident">futures_util</span>::{
     <span class="ident">future</span>::{<span class="self">self</span>, <span class="ident">AbortHandle</span>},
     <span class="ident">stream</span>::<span class="ident">Stream</span>,
 };
-
 <span class="kw">use</span> <span class="ident">once_cell</span>::<span class="ident">sync</span>::<span class="ident">OnceCell</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">atomic</span>::<span class="ident">Ordering</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">borrow</span>::<span class="ident">Cow</span>,
+    <span class="ident">sync</span>::{<span class="ident">atomic</span>::<span class="ident">Ordering</span>, <span class="ident">Arc</span>},
+};
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">sync</span>::<span class="ident">watch</span>::<span class="ident">Receiver</span> <span class="kw">as</span> <span class="ident">WatchReceiver</span>;
 <span class="kw">use</span> <span class="ident">tracing</span>::<span class="ident">debug</span>;
-
-<span class="kw">use</span> <span class="ident">async_tungstenite</span>::<span class="ident">tungstenite</span>::<span class="ident">protocol</span>::{<span class="ident">frame</span>::<span class="ident">coding</span>::<span class="ident">CloseCode</span>, <span class="ident">CloseFrame</span>};
-<span class="kw">use</span> <span class="ident">async_tungstenite</span>::<span class="ident">tungstenite</span>::<span class="ident">Message</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 <span class="kw">use</span> <span class="ident">twilight_model</span>::<span class="ident">gateway</span>::<span class="ident">event</span>::<span class="ident">Event</span>;
 
 <span class="doccomment">/// Information about a shard, including its latency, current session sequence,</span>

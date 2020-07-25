@@ -1605,8 +1605,6 @@
 <span id="1605">1605</span>
 <span id="1606">1606</span>
 <span id="1607">1607</span>
-<span id="1608">1608</span>
-<span id="1609">1609</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">mod</span> <span class="ident">builder</span>;
 
@@ -1640,8 +1638,6 @@
     <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">EmojiId</span>, <span class="ident">GuildId</span>, <span class="ident">IntegrationId</span>, <span class="ident">MessageId</span>, <span class="ident">RoleId</span>, <span class="ident">UserId</span>, <span class="ident">WebhookId</span>},
 };
 <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
-
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">json_from_slice</span>;
 
 <span class="kw">struct</span> <span class="ident">State</span> {
     <span class="ident">http</span>: <span class="ident">ReqwestClient</span>,
@@ -3080,7 +3076,7 @@
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes_b</span> <span class="op">=</span> <span class="ident">bytes</span>.<span class="ident">as_ref</span>().<span class="ident">to_vec</span>();
 
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">json_from_slice</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">bytes_b</span>);
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">json_from_slice</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">bytes_b</span>);
 
         <span class="ident">result</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">Parsing</span> {
             <span class="ident">body</span>: (<span class="kw-2">*</span><span class="ident">bytes</span>).<span class="ident">to_vec</span>(),

@@ -77,13 +77,10 @@
 <span id="77">77</span>
 <span id="78">78</span>
 <span id="79">79</span>
+<span id="80">80</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">request</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">de</span>::<span class="ident">DeserializeSeed</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;simd-json&quot;</span>))]</span>
-<span class="kw">use</span> <span class="ident">serde_json</span>::<span class="ident">Value</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;simd-json&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">simd_json</span>::<span class="ident">value</span>::<span class="ident">OwnedValue</span> <span class="kw">as</span> <span class="ident">Value</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">future</span>::<span class="ident">Future</span>,
     <span class="ident">pin</span>::<span class="ident">Pin</span>,
@@ -93,6 +90,11 @@
     <span class="ident">guild</span>::<span class="ident">member</span>::{<span class="ident">Member</span>, <span class="ident">MemberDeserializer</span>},
     <span class="ident">id</span>::{<span class="ident">GuildId</span>, <span class="ident">UserId</span>},
 };
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;simd-json&quot;</span>))]</span>
+<span class="kw">use</span> <span class="ident">serde_json</span>::<span class="ident">Value</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;simd-json&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">simd_json</span>::<span class="ident">value</span>::<span class="ident">OwnedValue</span> <span class="kw">as</span> <span class="ident">Value</span>;
 
 <span class="doccomment">/// Get a member of a guild, by id.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GetMember</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {

@@ -110,6 +110,7 @@
 <span id="110">110</span>
 <span id="111">111</span>
 <span id="112">112</span>
+<span id="113">113</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! # twilight-http</span>
 <span class="doccomment">//!</span>
@@ -119,12 +120,13 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ### Deserialization</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! `twilight-http` supports [`serde_json`] and [`simd-json`] for deserializing responses.</span>
+<span class="doccomment">//! `twilight-http` supports [`serde_json`] and [`simd-json`] for deserializing</span>
+<span class="doccomment">//! responses.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! #### `simd-json`</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! The `simd-json` feature enables [`simd-json`] support to use simd features of</span>
-<span class="doccomment">//! the modern cpus to deserialize responses faster. It is not enabled by</span>
+<span class="doccomment">//! The `simd-json` feature enables [`simd-json`] support to use simd features</span>
+<span class="doccomment">//! of modern cpus to deserialize responses faster. It is not enabled by</span>
 <span class="doccomment">//! default.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! To use this feature you need to also add these lines to</span>
@@ -143,32 +145,32 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```toml</span>
 <span class="doccomment">//! [dependencies]</span>
-<span class="doccomment">//! twilight-http = { branch = &quot;trunk&quot;, default-features = false, features = [&quot;native&quot;, &quot;simd-json&quot;], git = &quot;https://github.com/twilight-rs/twilight&quot; }</span>
+<span class="doccomment">//! twilight-http = { branch = &quot;trunk&quot;, default-features = false, features = [&quot;rustls&quot;, &quot;simd-json&quot;], git = &quot;https://github.com/twilight-rs/twilight&quot; }</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ### TLS</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! `twilight-http` has features to enable [`reqwest`]&#39;s TLS features. These</span>
-<span class="doccomment">//! features are mutually exclusive. `native` is enabled by default.</span>
+<span class="doccomment">//! features are mutually exclusive. `rustls` is enabled by default.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! #### `native`</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The `native` feature enables [`reqwest`]&#39;s `default-tls`</span>
 <span class="doccomment">//! feature, which is mostly equivalent to using [`native-tls`].</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! This is enabled by default.</span>
+<span class="doccomment">//! To enable `native`, do something like this in your `Cargo.toml`:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```toml</span>
+<span class="doccomment">//! [dependencies]</span>
+<span class="doccomment">//! twilight-http = { branch = &quot;trunk&quot;, default-features = false, features = [&quot;native&quot;], git = &quot;https://github.com/twilight-rs/twilight&quot; }</span>
+<span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! #### `rustls`</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The `rustls` feature enables [`reqwest`]&#39;s `rustls` feature, which uses</span>
 <span class="doccomment">//! [`rustls`] as the TLS backend.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! To enable `rustls`, do something like this in your `Cargo.toml`:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```toml</span>
-<span class="doccomment">//! [dependencies]</span>
-<span class="doccomment">//! twilight-http = { branch = &quot;trunk&quot;, default-features = false, features = [&quot;rustls&quot;], git = &quot;https://github.com/twilight-rs/twilight&quot; }</span>
-<span class="doccomment">//! ```</span>
+<span class="doccomment">//! This is enabled by default.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [`native-tls`]: https://crates.io/crates/native-tls</span>
 <span class="doccomment">//! [`reqwest`]: https://crates.io/crates/reqwest</span>

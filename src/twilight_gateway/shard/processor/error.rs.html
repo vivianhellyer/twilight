@@ -132,24 +132,20 @@
 <span id="132">132</span>
 <span id="133">133</span>
 <span id="134">134</span>
-<span id="135">135</span>
-<span id="136">136</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! The error type of why errors occur in the shard processor module.</span>
 
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">Utf8Error</span>;
-
+<span class="kw">use</span> <span class="ident">async_tungstenite</span>::<span class="ident">tungstenite</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">TungsteniteError</span>, <span class="ident">Message</span> <span class="kw">as</span> <span class="ident">TungsteniteMessage</span>};
 <span class="kw">use</span> <span class="ident">flate2</span>::<span class="ident">DecompressError</span>;
 <span class="kw">use</span> <span class="ident">futures_channel</span>::<span class="ident">mpsc</span>::<span class="ident">TrySendError</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt</span>, <span class="ident">str</span>::<span class="ident">Utf8Error</span>};
+<span class="kw">use</span> <span class="ident">twilight_model</span>::<span class="ident">gateway</span>::<span class="ident">GatewayIntents</span>;
+<span class="kw">use</span> <span class="ident">url</span>::<span class="ident">ParseError</span>;
+
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;simd-json&quot;</span>))]</span>
 <span class="kw">use</span> <span class="ident">serde_json</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">JsonError</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;simd-json&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">simd_json</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">JsonError</span>;
-<span class="kw">use</span> <span class="ident">url</span>::<span class="ident">ParseError</span>;
-
-<span class="kw">use</span> <span class="ident">async_tungstenite</span>::<span class="ident">tungstenite</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">TungsteniteError</span>, <span class="ident">Message</span> <span class="kw">as</span> <span class="ident">TungsteniteMessage</span>};
-<span class="kw">use</span> <span class="ident">twilight_model</span>::<span class="ident">gateway</span>::<span class="ident">GatewayIntents</span>;
 
 <span class="doccomment">/// A result enum with the error type being the shard processor&#39;s [`Error`] type.</span>
 <span class="doccomment">///</span>

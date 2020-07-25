@@ -632,8 +632,27 @@
     <span class="ident">session</span>::<span class="ident">Session</span>,
     <span class="ident">socket_forwarder</span>::<span class="ident">SocketForwarder</span>,
 };
-
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">listener</span>::<span class="ident">Listeners</span>;
+<span class="kw">use</span> <span class="ident">async_tungstenite</span>::<span class="ident">tungstenite</span>::{
+    <span class="ident">protocol</span>::{<span class="ident">frame</span>::<span class="ident">coding</span>::<span class="ident">CloseCode</span>, <span class="ident">CloseFrame</span>},
+    <span class="ident">Message</span>,
+};
+<span class="kw">use</span> <span class="ident">futures_channel</span>::<span class="ident">mpsc</span>::<span class="ident">UnboundedReceiver</span>;
+<span class="kw">use</span> <span class="ident">futures_util</span>::<span class="ident">stream</span>::<span class="ident">StreamExt</span>;
+<span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">Serialize</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">borrow</span>::<span class="ident">Cow</span>,
+    <span class="ident">env</span>::<span class="ident">consts</span>::<span class="ident">OS</span>,
+    <span class="ident">error</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">StdError</span>,
+    <span class="ident">ops</span>::<span class="ident">Deref</span>,
+    <span class="ident">str</span>,
+    <span class="ident">sync</span>::{<span class="ident">atomic</span>::<span class="ident">Ordering</span>, <span class="ident">Arc</span>},
+};
+<span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">sync</span>::<span class="ident">watch</span>::{
+    <span class="ident">channel</span> <span class="kw">as</span> <span class="ident">watch_channel</span>, <span class="ident">Receiver</span> <span class="kw">as</span> <span class="ident">WatchReceiver</span>, <span class="ident">Sender</span> <span class="kw">as</span> <span class="ident">WatchSender</span>,
+};
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_imports</span>)]</span>
+<span class="kw">use</span> <span class="ident">tracing</span>::{<span class="ident">debug</span>, <span class="ident">info</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
 <span class="kw">use</span> <span class="ident">twilight_model</span>::<span class="ident">gateway</span>::{
     <span class="ident">event</span>::{
         <span class="ident">shard</span>::{<span class="ident">Connected</span>, <span class="ident">Connecting</span>, <span class="ident">Disconnected</span>, <span class="ident">Identifying</span>, <span class="ident">Reconnecting</span>, <span class="ident">Resuming</span>},
@@ -645,27 +664,8 @@
     },
 };
 
-<span class="kw">use</span> <span class="ident">async_tungstenite</span>::<span class="ident">tungstenite</span>::{
-    <span class="ident">protocol</span>::{<span class="ident">frame</span>::<span class="ident">coding</span>::<span class="ident">CloseCode</span>, <span class="ident">CloseFrame</span>},
-    <span class="ident">Message</span>,
-};
-<span class="kw">use</span> <span class="ident">futures_channel</span>::<span class="ident">mpsc</span>::<span class="ident">UnboundedReceiver</span>;
-<span class="kw">use</span> <span class="ident">futures_util</span>::<span class="ident">stream</span>::<span class="ident">StreamExt</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">Serialize</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">env</span>::<span class="ident">consts</span>::<span class="ident">OS</span>, <span class="ident">ops</span>::<span class="ident">Deref</span>, <span class="ident">str</span>, <span class="ident">sync</span>::<span class="ident">Arc</span>};
-<span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">sync</span>::<span class="ident">watch</span>::{
-    <span class="ident">channel</span> <span class="kw">as</span> <span class="ident">watch_channel</span>, <span class="ident">Receiver</span> <span class="kw">as</span> <span class="ident">WatchReceiver</span>, <span class="ident">Sender</span> <span class="kw">as</span> <span class="ident">WatchSender</span>,
-};
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_imports</span>)]</span>
-<span class="kw">use</span> <span class="ident">tracing</span>::{<span class="ident">debug</span>, <span class="ident">info</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
-
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
-
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;metrics&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">metrics</span>::<span class="ident">counter</span>;
-
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">StdError</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">atomic</span>::<span class="ident">Ordering</span>;
 
 <span class="doccomment">/// Runs in the background and processes incoming events, and then broadcasts</span>
 <span class="doccomment">/// to all listeners.</span>
