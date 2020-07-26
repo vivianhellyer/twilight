@@ -54,6 +54,14 @@
 <span id="54">54</span>
 <span id="55">55</span>
 <span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">wildcard_imports</span>)]</span>
 <span class="doccomment">//! Events that the shard emits to event streams.</span>
@@ -86,8 +94,16 @@
 <span class="doccomment">/// event types returned by [`Events::event_types`] to see what events can come</span>
 <span class="doccomment">/// in through this stream.</span>
 <span class="doccomment">///</span>
+<span class="doccomment">/// This implements [`futures::stream::Stream`].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Refer to [`Shard::some_events`] for an example of how to use this.</span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// [`Events::event_types`]: #method.event_types</span>
 <span class="doccomment">/// [`Shard`]: ../struct.Shard.html</span>
+<span class="doccomment">/// [`Shard::some_events`]: struct.Shard.html#method.some_events</span>
+<span class="doccomment">/// [`futures::stream::Stream`]: https://docs.rs/futures/*/futures/stream/trait.Stream.html</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Events</span> {
     <span class="ident">event_types</span>: <span class="ident">EventTypeFlags</span>,
     <span class="ident">rx</span>: <span class="ident">UnboundedReceiver</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>,

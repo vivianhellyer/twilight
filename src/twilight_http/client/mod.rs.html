@@ -3161,7 +3161,7 @@
     }
 }
 
-<span class="comment">// parse the webhook id and token, if it exists in the string</span>
+<span class="doccomment">/// Parse the webhook ID and token, if it exists in the string.</span>
 <span class="kw">fn</span> <span class="ident">parse_webhook_url</span>(
     <span class="ident">url</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>,
 ) <span class="op">-&gt;</span> <span class="ident">std</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">WebhookId</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>), <span class="ident">UrlError</span><span class="op">&gt;</span> {

@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Events","A stream of events from a [`Shard`]."]]});

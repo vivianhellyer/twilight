@@ -359,6 +359,11 @@
 <span id="359">359</span>
 <span id="360">360</span>
 <span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">config</span>::<span class="ident">ShardConfig</span>,
@@ -373,10 +378,7 @@
     <span class="ident">protocol</span>::{<span class="ident">frame</span>::<span class="ident">coding</span>::<span class="ident">CloseCode</span>, <span class="ident">CloseFrame</span>},
     <span class="ident">Message</span>,
 };
-<span class="kw">use</span> <span class="ident">futures_util</span>::{
-    <span class="ident">future</span>::{<span class="self">self</span>, <span class="ident">AbortHandle</span>},
-    <span class="ident">stream</span>::<span class="ident">Stream</span>,
-};
+<span class="kw">use</span> <span class="ident">futures_util</span>::<span class="ident">future</span>::{<span class="self">self</span>, <span class="ident">AbortHandle</span>};
 <span class="kw">use</span> <span class="ident">once_cell</span>::<span class="ident">sync</span>::<span class="ident">OnceCell</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow</span>::<span class="ident">Cow</span>,
@@ -535,20 +537,23 @@
     <span class="doccomment">/// There can be multiple streams of events. All events will be broadcast to</span>
     <span class="doccomment">/// all streams of events.</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// The returned event stream implements [`futures::stream::Stream`].</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// All event types except for [`EventType::SHARD_PAYLOAD`] are enabled.</span>
     <span class="doccomment">/// If you need to enable it, consider calling [`some_events`] instead.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`EventType::SHARD_PAYLOAD`]: events/struct.EventType.html#const.SHARD_PAYLOAD</span>
+    <span class="doccomment">/// [`futures::stream::Stream`]: https://docs.rs/futures/*/futures/stream/trait.Stream.html</span>
     <span class="doccomment">/// [`some_events`]: #method.some_events</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">events</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw">impl</span> <span class="ident">Stream</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Event</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">rx</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">listeners</span>.<span class="ident">add</span>(<span class="ident">EventTypeFlags</span>::<span class="ident">default</span>());
-
-        <span class="ident">Events</span>::<span class="ident">new</span>(<span class="ident">EventTypeFlags</span>::<span class="ident">default</span>(), <span class="ident">rx</span>)
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">events</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Events</span> {
+        <span class="self">self</span>.<span class="ident">some_events</span>(<span class="ident">EventTypeFlags</span>::<span class="ident">default</span>()).<span class="kw">await</span>
     }
 
     <span class="doccomment">/// Creates a new filtered stream of events from the shard.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Only the events specified in the bitflags will be sent over the stream.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The returned event stream implements [`futures::stream::Stream`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
@@ -578,7 +583,9 @@
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">some_events</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">event_types</span>: <span class="ident">EventTypeFlags</span>) <span class="op">-&gt;</span> <span class="kw">impl</span> <span class="ident">Stream</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Event</span><span class="op">&gt;</span> {
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`futures::stream::Stream`]: https://docs.rs/futures/*/futures/stream/trait.Stream.html</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">some_events</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">event_types</span>: <span class="ident">EventTypeFlags</span>) <span class="op">-&gt;</span> <span class="ident">Events</span> {
         <span class="kw">let</span> <span class="ident">rx</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">listeners</span>.<span class="ident">add</span>(<span class="ident">event_types</span>);
 
         <span class="ident">Events</span>::<span class="ident">new</span>(<span class="ident">event_types</span>, <span class="ident">rx</span>)
@@ -680,7 +687,10 @@
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">session</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">session</span>() {
             <span class="comment">// Since we&#39;re shutting down now, we don&#39;t care if it sends or not.</span>
-            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">session</span>.<span class="ident">tx</span>.<span class="ident">unbounded_send</span>(<span class="ident">Message</span>::<span class="ident">Close</span>(<span class="prelude-val">None</span>));
+            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">session</span>.<span class="ident">tx</span>.<span class="ident">unbounded_send</span>(<span class="ident">Message</span>::<span class="ident">Close</span>(<span class="prelude-val">Some</span>(<span class="ident">CloseFrame</span> {
+                <span class="ident">code</span>: <span class="ident">CloseCode</span>::<span class="ident">Normal</span>,
+                <span class="ident">reason</span>: <span class="string">&quot;&quot;</span>.<span class="ident">into</span>(),
+            })));
             <span class="ident">session</span>.<span class="ident">stop_heartbeater</span>().<span class="kw">await</span>;
         }
     }

@@ -874,6 +874,19 @@
 <span id="874">874</span>
 <span id="875">875</span>
 <span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
+<span id="882">882</span>
+<span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Models to (de)serialize incoming/outgoing websocket events and HTTP</span>
 <span class="doccomment">//! responses.</span>
@@ -909,7 +922,9 @@
     <span class="ident">Volume</span>,
 }
 
-<span class="kw">mod</span> <span class="ident">outgoing</span> {
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">outgoing</span> {
+    <span class="doccomment">//! Events that clients send to Lavalink.</span>
+
     <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Opcode</span>;
     <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
     <span class="kw">use</span> <span class="ident">twilight_model</span>::{<span class="ident">gateway</span>::<span class="ident">payload</span>::<span class="ident">VoiceServerUpdate</span>, <span class="ident">id</span>::<span class="ident">GuildId</span>};
@@ -1333,7 +1348,9 @@
     }
 }
 
-<span class="kw">mod</span> <span class="ident">incoming</span> {
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">incoming</span> {
+    <span class="doccomment">//! Events that Lavalink sends to clients.</span>
+
     <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Opcode</span>;
     <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
     <span class="kw">use</span> <span class="ident">twilight_model</span>::<span class="ident">id</span>::<span class="ident">GuildId</span>;
@@ -1502,7 +1519,16 @@
     }
 }
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{<span class="ident">incoming</span>::<span class="kw-2">*</span>, <span class="ident">outgoing</span>::<span class="kw-2">*</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{
+    <span class="ident">incoming</span>::{
+        <span class="ident">IncomingEvent</span>, <span class="ident">PlayerUpdate</span>, <span class="ident">PlayerUpdateState</span>, <span class="ident">Stats</span>, <span class="ident">StatsCpu</span>, <span class="ident">StatsFrames</span>, <span class="ident">StatsMemory</span>,
+        <span class="ident">TrackEnd</span>, <span class="ident">TrackEventType</span>, <span class="ident">TrackStart</span>,
+    },
+    <span class="ident">outgoing</span>::{
+        <span class="ident">Destroy</span>, <span class="ident">Equalizer</span>, <span class="ident">EqualizerBand</span>, <span class="ident">OutgoingEvent</span>, <span class="ident">Pause</span>, <span class="ident">Play</span>, <span class="ident">Seek</span>, <span class="ident">SlimVoiceServerUpdate</span>,
+        <span class="ident">Stop</span>, <span class="ident">VoiceUpdate</span>, <span class="ident">Volume</span>,
+    },
+};
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {

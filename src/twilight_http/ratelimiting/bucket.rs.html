@@ -286,7 +286,6 @@
 <span id="286">286</span>
 <span id="287">287</span>
 <span id="288">288</span>
-<span id="289">289</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">headers</span>::<span class="ident">RatelimitHeaders</span>, <span class="ident">GlobalLockPair</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">routing</span>::<span class="ident">Path</span>;
@@ -305,7 +304,6 @@
 };
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">time</span>::{<span class="ident">delay_for</span>, <span class="ident">timeout</span>};
 <span class="kw">use</span> <span class="ident">tracing</span>::<span class="ident">debug</span>;
-<span class="comment">//use tokio::future::FutureExt as _;</span>
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TimeRemaining</span> {

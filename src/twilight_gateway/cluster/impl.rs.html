@@ -325,6 +325,19 @@
 <span id="325">325</span>
 <span id="326">326</span>
 <span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">config</span>::{<span class="ident">ClusterConfig</span>, <span class="ident">ShardScheme</span>},
@@ -341,6 +354,7 @@
 };
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections</span>::<span class="ident">HashMap</span>,
+    <span class="ident">iter</span>::<span class="ident">FromIterator</span>,
     <span class="ident">sync</span>::{<span class="ident">Arc</span>, <span class="ident">Weak</span>},
 };
 <span class="kw">use</span> <span class="ident">twilight_model</span>::<span class="ident">gateway</span>::<span class="ident">event</span>::<span class="ident">Event</span>;
@@ -485,10 +499,16 @@
         <span class="ident">future</span>::<span class="ident">join_all</span>(<span class="ident">tasks</span>).<span class="kw">await</span>;
     }
 
-    <span class="doccomment">/// Brings down the cluster in a resumable way and returns all info needed for resuming</span>
+    <span class="doccomment">/// Brings down the cluster in a resumable way and returns all info needed</span>
+    <span class="doccomment">/// for resuming.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Note discord only allows resuming for a few minutes after disconnection. You can also not resume if you missed too many events already</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">down_resumable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ResumeSession</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
+    <span class="doccomment">/// The returned map is keyed by the shard&#39;s ID to the information needed</span>
+    <span class="doccomment">/// to resume. If a shard can&#39;t resume, then it is not included in the map.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// **Note**: Discord only allows resuming for a few minutes after</span>
+    <span class="doccomment">/// disconnection. You may also not be able to resume if you missed too many</span>
+    <span class="doccomment">/// events already.</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">down_resumable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">ResumeSession</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">lock</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">shards</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
 
         <span class="kw">let</span> <span class="ident">tasks</span> <span class="op">=</span> <span class="ident">lock</span>
@@ -496,7 +516,13 @@
             .<span class="ident">map</span>(<span class="ident">Shard</span>::<span class="ident">shutdown_resumable</span>)
             .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;&gt;</span>();
 
-        <span class="ident">future</span>::<span class="ident">join_all</span>(<span class="ident">tasks</span>).<span class="kw">await</span>
+        <span class="kw">let</span> <span class="ident">sessions</span> <span class="op">=</span> <span class="ident">future</span>::<span class="ident">join_all</span>(<span class="ident">tasks</span>).<span class="kw">await</span>;
+
+        <span class="ident">HashMap</span>::<span class="ident">from_iter</span>(
+            <span class="ident">sessions</span>
+                .<span class="ident">into_iter</span>()
+                .<span class="ident">filter_map</span>(<span class="op">|</span>(<span class="ident">shard_id</span>, <span class="ident">session</span>)<span class="op">|</span> <span class="ident">session</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">session</span><span class="op">|</span> (<span class="ident">shard_id</span>, <span class="ident">session</span>))),
+        )
     }
 
     <span class="doccomment">/// Returns a Shard by its ID.</span>

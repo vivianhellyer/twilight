@@ -133,10 +133,10 @@
 };
 <span class="kw">use</span> <span class="ident">tracing</span>::<span class="ident">debug</span>;
 
-<span class="comment">// Global lock. We use a pair to avoid actually locking the mutex every check.</span>
-<span class="comment">// This allows futures to only wait on the global lock when a global ratelimit</span>
-<span class="comment">// is in place by, in turn, waiting for a guard, and then each immediately</span>
-<span class="comment">// dropping it.</span>
+<span class="doccomment">/// Global lock. We use a pair to avoid actually locking the mutex every check.</span>
+<span class="doccomment">/// This allows futures to only wait on the global lock when a global ratelimit</span>
+<span class="doccomment">/// is in place by, in turn, waiting for a guard, and then each immediately</span>
+<span class="doccomment">/// dropping it.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>)]</span>
 <span class="kw">struct</span> <span class="ident">GlobalLockPair</span>(<span class="ident">Mutex</span><span class="op">&lt;</span>()<span class="op">&gt;</span>, <span class="ident">AtomicBool</span>);
 

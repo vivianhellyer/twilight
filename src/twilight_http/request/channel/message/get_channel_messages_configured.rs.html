@@ -134,13 +134,13 @@
     <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
 }
 
-<span class="comment">// nb: after, around, and before are mutually exclusive, so we use this</span>
-<span class="comment">// &quot;configured&quot; request to utilize the type system to prevent these from being</span>
-<span class="comment">// set in combination.</span>
 <span class="doccomment">/// This struct is returned when one of `after`, `around`, or `before` is specified in</span>
 <span class="doccomment">/// [`GetChannelMessages`].</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`GetChannelMessages`]: ../get_channel_messages/struct.GetChannelMessages.html</span>
+<span class="comment">// nb: after, around, and before are mutually exclusive, so we use this</span>
+<span class="comment">// &quot;configured&quot; request to utilize the type system to prevent these from being</span>
+<span class="comment">// set in combination.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GetChannelMessagesConfigured</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="ident">after</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MessageId</span><span class="op">&gt;</span>,
     <span class="ident">around</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MessageId</span><span class="op">&gt;</span>,
