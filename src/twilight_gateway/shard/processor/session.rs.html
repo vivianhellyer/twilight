@@ -156,8 +156,6 @@
 <span id="156">156</span>
 <span id="157">157</span>
 <span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::{
     <span class="kw">super</span>::<span class="ident">stage</span>::<span class="ident">Stage</span>,
@@ -298,9 +296,7 @@
         <span class="kw">let</span> <span class="ident">heartbeater</span> <span class="op">=</span> <span class="ident">Heartbeater</span>::<span class="ident">new</span>(<span class="ident">heartbeats</span>, <span class="ident">interval</span>, <span class="ident">seq</span>, <span class="self">self</span>.<span class="ident">tx</span>.<span class="ident">clone</span>()).<span class="ident">run</span>();
         <span class="kw">let</span> (<span class="ident">fut</span>, <span class="ident">handle</span>) <span class="op">=</span> <span class="ident">future</span>::<span class="ident">abortable</span>(<span class="ident">heartbeater</span>);
 
-        <span class="ident">tokio</span>::<span class="ident">spawn</span>(<span class="kw">async</span> {
-            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">fut</span>.<span class="kw">await</span>;
-        });
+        <span class="ident">tokio</span>::<span class="ident">spawn</span>(<span class="ident">fut</span>);
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">old</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">heartbeater_handle</span>.<span class="ident">lock</span>().<span class="kw">await</span>.<span class="ident">replace</span>(<span class="ident">handle</span>) {
             <span class="ident">old</span>.<span class="ident">abort</span>();
@@ -312,7 +308,7 @@
     <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
         <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">heartbeater_handle</span>);
 
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">tokio</span>::<span class="ident">spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
+        <span class="ident">tokio</span>::<span class="ident">spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">handle</span>) <span class="op">=</span> <span class="ident">handle</span>.<span class="ident">lock</span>().<span class="kw">await</span>.<span class="ident">take</span>() {
                 <span class="ident">handle</span>.<span class="ident">abort</span>();
             }
