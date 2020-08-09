@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["Error","Error type representing the possible reasons for errors to occur in the shard."]],"type":[["Result","A result enum with the error type being the shard's [`Error`] type."]]});

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["BotConnectionInfo",""],["ConnectionInfo",""]]});
+initSidebarItems({"struct":[["BotConnectionInfo","Gateway information containing the recommended shard count and session availability."],["ConnectionInfo","Gateway information containing the URL to connect to."]]});

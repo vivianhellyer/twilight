@@ -236,12 +236,148 @@
 <span id="236">236</span>
 <span id="237">237</span>
 <span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Error</span>, <span class="prelude-ty">Result</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">queue</span>::{<span class="ident">LocalQueue</span>, <span class="ident">Queue</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">error</span>::<span class="ident">Error</span>,
+    <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
+    <span class="ident">sync</span>::<span class="ident">Arc</span>,
+};
 <span class="kw">use</span> <span class="ident">twilight_http</span>::<span class="ident">Client</span> <span class="kw">as</span> <span class="ident">HttpClient</span>;
 <span class="kw">use</span> <span class="ident">twilight_model</span>::<span class="ident">gateway</span>::{<span class="ident">payload</span>::<span class="ident">update_status</span>::<span class="ident">UpdateStatusInfo</span>, <span class="ident">GatewayIntents</span>};
+
+<span class="doccomment">/// Large threshold configuration is invalid.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Returned by [`ShardConfigBuilder::large_threshold`].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`ShardConfigBuilder::large_threshold`]: struct.ShardConfigBuilder.html#method.large_threshold</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">LargeThresholdError</span> {
+    <span class="doccomment">/// Provided large threshold value is too few in number.</span>
+    <span class="ident">TooFew</span> {
+        <span class="doccomment">/// Provided value.</span>
+        <span class="ident">value</span>: <span class="ident">u64</span>,
+    },
+    <span class="doccomment">/// Provided large threshold value is too many in number.</span>
+    <span class="ident">TooMany</span> {
+        <span class="doccomment">/// Provided value.</span>
+        <span class="ident">value</span>: <span class="ident">u64</span>,
+    },
+}
+
+<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">LargeThresholdError</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">FmtResult</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="self">Self</span>::<span class="ident">TooFew</span> { .. } <span class="op">=&gt;</span> <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;provided large threshold value is fewer than 50&quot;</span>),
+            <span class="self">Self</span>::<span class="ident">TooMany</span> { .. } <span class="op">=&gt;</span> <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;provided large threshold value is more than 250&quot;</span>),
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">LargeThresholdError</span> {}
+
+<span class="doccomment">/// Shard ID configuration is invalid.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Returned by [`ShardConfigBuilder::shard`].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`ShardConfigBuilder::shard`]: struct.ShardConfigBuilder.html#method.shard</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ShardIdError</span> {
+    <span class="doccomment">/// Provided shard ID is higher than provided total shard count.</span>
+    <span class="ident">IdTooLarge</span> {
+        <span class="doccomment">/// Shard ID.</span>
+        <span class="ident">id</span>: <span class="ident">u64</span>,
+        <span class="doccomment">/// Total shard count.</span>
+        <span class="ident">total</span>: <span class="ident">u64</span>,
+    },
+}
+
+<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ShardIdError</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">FmtResult</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="self">Self</span>::<span class="ident">IdTooLarge</span> { <span class="ident">id</span>, <span class="ident">total</span> } <span class="op">=&gt;</span> <span class="ident">f</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args</span><span class="macro">!</span>(
+                <span class="string">&quot;provided shard ID {} is larger than the total {}&quot;</span>,
+                <span class="ident">id</span>, <span class="ident">total</span>,
+            )),
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">ShardIdError</span> {}
 
 <span class="doccomment">/// The configuration used by the shard to identify with the gateway and</span>
 <span class="doccomment">/// operate.</span>
@@ -381,15 +517,27 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns [`Error::LargeThresholdInvalid`] if the provided value was below</span>
-    <span class="doccomment">/// 50 or above 250.</span>
+    <span class="doccomment">/// Returns [`LargeThresholdError::TooFew`] if the provided value is below</span>
+    <span class="doccomment">/// 50.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`Error::LargeThresholdInvalid`]: ../error/enum.Error.html#variant.LargeThresholdInvalid</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">large_threshold</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">large_threshold</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="ident">large_threshold</span> <span class="op">&gt;</span> <span class="number">250</span> <span class="op">||</span> <span class="ident">large_threshold</span> <span class="op">&lt;</span> <span class="number">50</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">LargeThresholdInvalid</span> {
-                <span class="ident">value</span>: <span class="ident">large_threshold</span>,
-            });
+    <span class="doccomment">/// Returns [`LargeThresholdError::TooMany`] if the provided value is above</span>
+    <span class="doccomment">/// 250.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`LargeThresholdError::TooFew`]: enum.LargeThresholdError.html#variant.TooFew</span>
+    <span class="doccomment">/// [`LargeThresholdError::TooMany`]: enum.LargeThresholdError.html#variant.TooMany</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">large_threshold</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">large_threshold</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">LargeThresholdError</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="ident">large_threshold</span> {
+            <span class="number">0</span>..<span class="op">=</span><span class="number">49</span> <span class="op">=&gt;</span> {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">LargeThresholdError</span>::<span class="ident">TooFew</span> {
+                    <span class="ident">value</span>: <span class="ident">large_threshold</span>,
+                })
+            }
+            <span class="number">50</span>..<span class="op">=</span><span class="number">250</span> <span class="op">=&gt;</span> {}
+            <span class="number">251</span>..<span class="op">=</span><span class="ident">u64</span>::<span class="ident">MAX</span> <span class="op">=&gt;</span> {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">LargeThresholdError</span>::<span class="ident">TooMany</span> {
+                    <span class="ident">value</span>: <span class="ident">large_threshold</span>,
+                })
+            }
         }
 
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">large_threshold</span> <span class="op">=</span> <span class="ident">large_threshold</span>;
@@ -452,13 +600,13 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns [`Error::IdTooLarge`] if the shard ID to connect as is larger</span>
-    <span class="doccomment">/// than the total.</span>
+    <span class="doccomment">/// Returns [`ShardIdError::IdTooLarge`] if the shard ID to connect as is</span>
+    <span class="doccomment">/// larger than the total.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`Error::IdTooLarge`]: ../error/enum.Error.html#variant.IdTooLarge</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shard</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">shard_id</span>: <span class="ident">u64</span>, <span class="ident">shard_total</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// [`ShardIdError::IdTooLarge`]: enum.ShardIdError.html#variant.IdTooLarge</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shard</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">shard_id</span>: <span class="ident">u64</span>, <span class="ident">shard_total</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ShardIdError</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">shard_id</span> <span class="op">&gt;=</span> <span class="ident">shard_total</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">IdTooLarge</span> {
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ShardIdError</span>::<span class="ident">IdTooLarge</span> {
                 <span class="ident">id</span>: <span class="ident">shard_id</span>,
                 <span class="ident">total</span>: <span class="ident">shard_total</span>,
             });

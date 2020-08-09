@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["config",""],["error","The error type of why errors occur in the cluster module."]],"struct":[["Cluster","A manager for multiple shards."]]});
+initSidebarItems({"enum":[["ClusterCommandError","Sending a command to a shard failed."],["ClusterStartError","Starting a cluster failed."]],"mod":[["config",""]],"struct":[["Cluster","A manager for multiple shards."]]});
