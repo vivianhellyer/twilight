@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["ImageSourceAttachmentError","Error creating an embed field."],["ImageSourceUrlError","Error creating an embed field."]],"struct":[["ImageSource","Image sourcing for embed images."]]});

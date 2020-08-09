@@ -1278,7 +1278,7 @@
     <span class="doccomment">/// This function must be called when events are received in order for</span>
     <span class="doccomment">/// futures returned by methods to fulfill.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>) {
-        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Processing event: {:?}&quot;</span>, <span class="ident">event</span>);
+        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;processing event: {:?}&quot;</span>, <span class="ident">event</span>);
 
         <span class="kw">match</span> <span class="ident">event</span> {
             <span class="ident">Event</span>::<span class="ident">MessageCreate</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">process_message</span>(<span class="ident">e</span>.<span class="number">0</span>.<span class="ident">channel_id</span>, <span class="kw-2">&amp;</span><span class="ident">e</span>),
@@ -1327,7 +1327,7 @@
         <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;&gt;</span>,
     ) <span class="op">-&gt;</span> <span class="ident">WaitForGuildEventFuture</span> {
-        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Waiting for event in guild {}&quot;</span>, <span class="ident">guild_id</span>);
+        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;waiting for event in guild {}&quot;</span>, <span class="ident">guild_id</span>);
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot</span>::<span class="ident">channel</span>();
 
         {
@@ -1382,7 +1382,7 @@
         <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;&gt;</span>,
     ) <span class="op">-&gt;</span> <span class="ident">WaitForGuildEventStream</span> {
-        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Waiting for event in guild {}&quot;</span>, <span class="ident">guild_id</span>);
+        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;waiting for event in guild {}&quot;</span>, <span class="ident">guild_id</span>);
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">mpsc</span>::<span class="ident">unbounded</span>();
 
         {
@@ -1433,7 +1433,7 @@
         <span class="ident">event_type</span>: <span class="ident">EventType</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;&gt;</span>,
     ) <span class="op">-&gt;</span> <span class="ident">WaitForEventFuture</span> {
-        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Waiting for event {:?}&quot;</span>, <span class="ident">event_type</span>);
+        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;waiting for event {:?}&quot;</span>, <span class="ident">event_type</span>);
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot</span>::<span class="ident">channel</span>();
 
         {
@@ -1488,7 +1488,7 @@
         <span class="ident">event_type</span>: <span class="ident">EventType</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;&gt;</span>,
     ) <span class="op">-&gt;</span> <span class="ident">WaitForEventStream</span> {
-        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Waiting for event {:?}&quot;</span>, <span class="ident">event_type</span>);
+        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;waiting for event {:?}&quot;</span>, <span class="ident">event_type</span>);
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">mpsc</span>::<span class="ident">unbounded</span>();
 
         {
@@ -1534,7 +1534,7 @@
         <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;&gt;</span>,
     ) <span class="op">-&gt;</span> <span class="ident">WaitForMessageFuture</span> {
-        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Waiting for message in channel {}&quot;</span>, <span class="ident">channel_id</span>);
+        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;waiting for message in channel {}&quot;</span>, <span class="ident">channel_id</span>);
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot</span>::<span class="ident">channel</span>();
 
         {
@@ -1585,7 +1585,7 @@
         <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;&gt;</span>,
     ) <span class="op">-&gt;</span> <span class="ident">WaitForMessageStream</span> {
-        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Waiting for message in channel {}&quot;</span>, <span class="ident">channel_id</span>);
+        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;waiting for message in channel {}&quot;</span>, <span class="ident">channel_id</span>);
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">mpsc</span>::<span class="ident">unbounded</span>();
 
         {
@@ -1631,7 +1631,7 @@
         <span class="ident">message_id</span>: <span class="ident">MessageId</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;&gt;</span>,
     ) <span class="op">-&gt;</span> <span class="ident">WaitForReactionFuture</span> {
-        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Waiting for reaction on message {}&quot;</span>, <span class="ident">message_id</span>);
+        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;waiting for reaction on message {}&quot;</span>, <span class="ident">message_id</span>);
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot</span>::<span class="ident">channel</span>();
 
         {
@@ -1685,7 +1685,7 @@
         <span class="ident">message_id</span>: <span class="ident">MessageId</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;&gt;</span>,
     ) <span class="op">-&gt;</span> <span class="ident">WaitForReactionStream</span> {
-        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Waiting for reaction on message {}&quot;</span>, <span class="ident">message_id</span>);
+        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;waiting for reaction on message {}&quot;</span>, <span class="ident">message_id</span>);
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">mpsc</span>::<span class="ident">unbounded</span>();
 
         {
@@ -1700,7 +1700,7 @@
     }
 
     <span class="kw">fn</span> <span class="ident">process_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>) {
-        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Processing event type {:?}&quot;</span>, <span class="ident">event</span>);
+        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;processing event type {:?}&quot;</span>, <span class="ident">event</span>);
         <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">event</span>.<span class="ident">kind</span>();
 
         <span class="kw">let</span> <span class="ident">remove</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">events</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">kind</span>) {
@@ -1710,14 +1710,14 @@
                 <span class="ident">bystanders</span>.<span class="ident">is_empty</span>()
             }
             <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
-                <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Event type {:?} has no bystanders&quot;</span>, <span class="ident">kind</span>);
+                <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;event type {:?} has no bystanders&quot;</span>, <span class="ident">kind</span>);
 
                 <span class="kw">return</span>;
             }
         };
 
         <span class="kw">if</span> <span class="ident">remove</span> {
-            <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Removing event type {:?}&quot;</span>, <span class="ident">kind</span>);
+            <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;removing event type {:?}&quot;</span>, <span class="ident">kind</span>);
 
             <span class="self">self</span>.<span class="number">0</span>.<span class="ident">events</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">kind</span>);
         }
@@ -1731,14 +1731,14 @@
                 <span class="ident">bystanders</span>.<span class="ident">is_empty</span>()
             }
             <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
-                <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Guild {} has no event bystanders&quot;</span>, <span class="ident">guild_id</span>);
+                <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;guild {} has no event bystanders&quot;</span>, <span class="ident">guild_id</span>);
 
                 <span class="kw">return</span>;
             }
         };
 
         <span class="kw">if</span> <span class="ident">remove</span> {
-            <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Removing guild {}&quot;</span>, <span class="ident">guild_id</span>);
+            <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;removing guild {}&quot;</span>, <span class="ident">guild_id</span>);
 
             <span class="self">self</span>.<span class="number">0</span>.<span class="ident">guilds</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">guild_id</span>);
         }
@@ -1752,14 +1752,14 @@
                 <span class="ident">bystanders</span>.<span class="ident">is_empty</span>()
             }
             <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
-                <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Channel {} has no message bystanders&quot;</span>, <span class="ident">channel_id</span>);
+                <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;channel {} has no message bystanders&quot;</span>, <span class="ident">channel_id</span>);
 
                 <span class="kw">return</span>;
             }
         };
 
         <span class="kw">if</span> <span class="ident">remove</span> {
-            <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Removing channel {}&quot;</span>, <span class="ident">channel_id</span>);
+            <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;removing channel {}&quot;</span>, <span class="ident">channel_id</span>);
 
             <span class="self">self</span>.<span class="number">0</span>.<span class="ident">messages</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">channel_id</span>);
         }
@@ -1773,32 +1773,32 @@
                 <span class="ident">bystanders</span>.<span class="ident">is_empty</span>()
             }
             <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
-                <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Message {} has no reaction bystanders&quot;</span>, <span class="ident">message_id</span>);
+                <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;message {} has no reaction bystanders&quot;</span>, <span class="ident">message_id</span>);
 
                 <span class="kw">return</span>;
             }
         };
 
         <span class="kw">if</span> <span class="ident">remove</span> {
-            <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Removing message {}&quot;</span>, <span class="ident">message_id</span>);
+            <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;removing message {}&quot;</span>, <span class="ident">message_id</span>);
             <span class="self">self</span>.<span class="number">0</span>.<span class="ident">reactions</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">message_id</span>);
         }
     }
 
     <span class="doccomment">/// Iterate over bystanders and remove the ones that match the predicate.</span>
     <span class="kw">fn</span> <span class="ident">iter_bystanders</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">Clone</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">bystanders</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;&gt;</span>, <span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">E</span>) {
-        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Iterating over bystanders: {:?}&quot;</span>, <span class="ident">bystanders</span>);
+        <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;iterating over bystanders: {:?}&quot;</span>, <span class="ident">bystanders</span>);
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">idx</span> <span class="op">=</span> <span class="number">0</span>;
 
         <span class="kw">while</span> <span class="ident">idx</span> <span class="op">&lt;</span> <span class="ident">bystanders</span>.<span class="ident">len</span>() {
-            <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Checking bystander&quot;</span>);
+            <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;checking bystander&quot;</span>);
             <span class="kw">let</span> <span class="ident">bystander</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">bystanders</span>[<span class="ident">idx</span>];
 
             <span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">bystander</span>.<span class="ident">sender</span>.<span class="ident">take</span>() {
                 <span class="prelude-val">Some</span>(<span class="ident">sender</span>) <span class="op">=&gt;</span> <span class="ident">sender</span>,
                 <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
-                    <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Bystander has no sender, removing&quot;</span>);
+                    <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;bystander has no sender, removing&quot;</span>);
                     <span class="ident">bystanders</span>.<span class="ident">remove</span>(<span class="ident">idx</span>);
                     <span class="ident">idx</span> <span class="op">+=</span> <span class="number">1</span>;
 
@@ -1807,14 +1807,14 @@
             };
 
             <span class="kw">if</span> <span class="ident">sender</span>.<span class="ident">is_closed</span>() {
-                <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Bystander&#39;s rx dropped, removing&quot;</span>);
+                <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;bystander&#39;s rx dropped, removing&quot;</span>);
                 <span class="ident">bystanders</span>.<span class="ident">remove</span>(<span class="ident">idx</span>);
 
                 <span class="kw">continue</span>;
             }
 
             <span class="kw">if</span> <span class="op">!</span>(<span class="ident">bystander</span>.<span class="ident">func</span>)(<span class="ident">event</span>) {
-                <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Bystander check doesn&#39;t match, continuing&quot;</span>);
+                <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;bystander check doesn&#39;t match, continuing&quot;</span>);
                 <span class="ident">bystander</span>.<span class="ident">sender</span>.<span class="ident">replace</span>(<span class="ident">sender</span>);
                 <span class="ident">idx</span> <span class="op">+=</span> <span class="number">1</span>;
 
@@ -1824,7 +1824,7 @@
             <span class="kw">match</span> <span class="ident">sender</span> {
                 <span class="ident">Sender</span>::<span class="ident">Oneshot</span>(<span class="ident">tx</span>) <span class="op">=&gt;</span> {
                     <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">send</span>(<span class="ident">event</span>.<span class="ident">clone</span>());
-                    <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Bystander matched event, removing&quot;</span>);
+                    <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;bystander matched event, removing&quot;</span>);
                     <span class="ident">bystanders</span>.<span class="ident">remove</span>(<span class="ident">idx</span>);
                 }
                 <span class="ident">Sender</span>::<span class="ident">Mpsc</span>(<span class="ident">tx</span>) <span class="op">=&gt;</span> {

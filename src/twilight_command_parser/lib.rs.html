@@ -83,14 +83,13 @@
 <span id="83">83</span>
 <span id="84">84</span>
 <span id="85">85</span>
-<span id="86">86</span>
-<span id="87">87</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! [![license badge][]][license link] [![rust badge]][rust link]</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # twilight-command-parser</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! `twilight-command-parser` is a command parser for the [`twilight`] ecosystem.</span>
+<span class="doccomment">//! `twilight-command-parser` is a command parser for the [`twilight-rs`]</span>
+<span class="doccomment">//! ecosystem.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Included is a mutable configuration that allows you to specify the command</span>
 <span class="doccomment">//! names and prefixes. The parser parses out commands matching an available</span>
@@ -117,9 +116,8 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! let mut config = CommandParserConfig::new();</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! // (Use `CommandParserConfig::add_command` to add a single command)</span>
-<span class="doccomment">//! config.command(&quot;echo&quot;).add();</span>
-<span class="doccomment">//! config.command(&quot;ping&quot;).add();</span>
+<span class="doccomment">//! config.add_command(&quot;echo&quot;, false);</span>
+<span class="doccomment">//! config.add_command(&quot;ping&quot;, false);</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! // Add the prefix `&quot;!&quot;`.</span>
 <span class="doccomment">//! // (Use `CommandParserConfig::add_prefixes` to add multiple prefixes)</span>
@@ -147,7 +145,7 @@
 <span class="doccomment">//! [license link]: https://opensource.org/licenses/ISC</span>
 <span class="doccomment">//! [rust badge]: https://img.shields.io/badge/rust-1.36+-93450a.svg?style=flat-square</span>
 <span class="doccomment">//! [rust link]: https://blog.rust-lang.org/2019/07/04/Rust-1.36.0.html</span>
-<span class="doccomment">//! [`twilight`]: https://twilight.valley.cafe</span>
+<span class="doccomment">//! [`twilight-rs`]: https://github.com/twilight-rs/twilight</span>
 
 <span class="attribute">#![<span class="ident">deny</span>(
     <span class="ident">clippy</span>::<span class="ident">all</span>,
@@ -161,14 +159,12 @@
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">module_name_repetitions</span>, <span class="ident">clippy</span>::<span class="ident">must_use_candidate</span>)]</span>
 
 <span class="kw">mod</span> <span class="ident">arguments</span>;
-<span class="kw">mod</span> <span class="ident">builder</span>;
 <span class="kw">mod</span> <span class="ident">casing</span>;
 <span class="kw">mod</span> <span class="ident">config</span>;
 <span class="kw">mod</span> <span class="ident">parser</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{
     <span class="ident">arguments</span>::<span class="ident">Arguments</span>,
-    <span class="ident">builder</span>::<span class="ident">CommandBuilder</span>,
     <span class="ident">casing</span>::<span class="ident">CaseSensitivity</span>,
     <span class="ident">config</span>::<span class="ident">CommandParserConfig</span>,
     <span class="ident">parser</span>::{<span class="ident">Command</span>, <span class="ident">Parser</span>},

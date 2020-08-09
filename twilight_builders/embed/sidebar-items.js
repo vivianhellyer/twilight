@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["AuthorBuilder",""],["EmbedBuilder","Create an embed via a builder."],["FieldBuilder",""],["FooterBuilder",""]]});

@@ -119,21 +119,17 @@
 <span id="119">119</span>
 <span id="120">120</span>
 <span id="121">121</span>
-<span id="122">122</span>
-<span id="123">123</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="doccomment">//! Utilities for knowing and parsing the current connection stage of a</span>
-<span class="doccomment">//! [`Shard`].</span>
+<span class="doccomment">//! Utilities for knowing and parsing the current connection stage of a shard.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Included is the [`Stage`], which is an enum representing the connection</span>
 <span class="doccomment">//! stage with variants such as [`Connecting`] or [`Disconnected`].</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! The `Stage` also has some parsing capability, so an error type for</span>
+<span class="doccomment">//! The [`Stage`] also has some parsing capability, so an error type for</span>
 <span class="doccomment">//! conversion reasons is included.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [`Connecting`]: enum.Stage.html#variant.Connecting</span>
 <span class="doccomment">//! [`Disconnected`]: enum.Stage.html#variant.Disconnected</span>
-<span class="doccomment">//! [`Shard`]: ../struct.Shard.html</span>
 <span class="doccomment">//! [`Stage`]: enum.Stage.html</span>
 
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -167,7 +163,7 @@
 
 <span class="doccomment">/// The current connection stage of a [`Shard`].</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// [`Shard`]: struct.Shard.html</span>
+<span class="doccomment">/// [`Shard`]: ../struct.Shard.html</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">Ord</span>, <span class="ident">PartialEq</span>, <span class="ident">PartialOrd</span>)]</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">u8</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Stage</span> {

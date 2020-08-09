@@ -233,12 +233,93 @@
 <span id="233">233</span>
 <span id="234">234</span>
 <span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="kw">super</span>::<span class="ident">payload</span>::<span class="kw-2">*</span>, <span class="ident">EventType</span>};
+<span class="kw">use</span> <span class="kw">super</span>::{<span class="kw">super</span>::<span class="ident">payload</span>::<span class="kw-2">*</span>, <span class="ident">Event</span>, <span class="ident">EventConversionError</span>, <span class="ident">EventType</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{
     <span class="ident">de</span>::{<span class="ident">Deserialize</span>, <span class="ident">DeserializeSeed</span>, <span class="ident">Deserializer</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DeError</span>, <span class="ident">IgnoredAny</span>},
     <span class="ident">Serialize</span>,
 };
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
 
 <span class="doccomment">/// A dispatch event, containing information about a created guild, a member</span>
 <span class="doccomment">/// added, etc.</span>
@@ -247,7 +328,10 @@
 <span class="doccomment">/// [`DispatchEventWithTypeDeserializer`].</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`DispatchEventWithTypeDeserializer`]: struct.DispatchEventWithTypeDeserializer.html</span>
+<span class="comment">// **NOTE**: When adding a variant, be sure to add it to the DeserializeSeed</span>
+<span class="comment">// implementation.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DispatchEvent</span> {
     <span class="ident">BanAdd</span>(<span class="ident">BanAdd</span>),
     <span class="ident">BanRemove</span>(<span class="ident">BanRemove</span>),
@@ -337,6 +421,56 @@
     }
 }
 
+<span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DispatchEvent</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">EventConversionError</span>;
+
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">event</span>: <span class="ident">Event</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">event</span> {
+            <span class="ident">Event</span>::<span class="ident">BanAdd</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">BanAdd</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">BanRemove</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">BanRemove</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">ChannelCreate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">ChannelCreate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">ChannelDelete</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">ChannelDelete</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">ChannelPinsUpdate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">ChannelPinsUpdate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">ChannelUpdate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">ChannelUpdate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">GiftCodeUpdate</span> <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">GiftCodeUpdate</span>,
+            <span class="ident">Event</span>::<span class="ident">GuildCreate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">GuildCreate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">GuildDelete</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">GuildDelete</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">GuildEmojisUpdate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">GuildEmojisUpdate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">GuildIntegrationsUpdate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">GuildIntegrationsUpdate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">GuildUpdate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">GuildUpdate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">InviteCreate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">InviteCreate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">InviteDelete</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">InviteDelete</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">MemberAdd</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">MemberAdd</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">MemberRemove</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">MemberRemove</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">MemberUpdate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">MemberUpdate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">MemberChunk</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">MemberChunk</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">MessageCreate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">MessageCreate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">MessageDelete</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">MessageDelete</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">MessageDeleteBulk</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">MessageDeleteBulk</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">MessageUpdate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">MessageUpdate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">PresenceUpdate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">PresenceUpdate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">PresencesReplace</span> <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">PresencesReplace</span>,
+            <span class="ident">Event</span>::<span class="ident">ReactionAdd</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">ReactionAdd</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">ReactionRemove</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">ReactionRemove</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">ReactionRemoveAll</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">ReactionRemoveAll</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">ReactionRemoveEmoji</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">ReactionRemoveEmoji</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">Ready</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">Ready</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">Resumed</span> <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">Resumed</span>,
+            <span class="ident">Event</span>::<span class="ident">RoleCreate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">RoleCreate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">RoleDelete</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">RoleDelete</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">RoleUpdate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">RoleUpdate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">TypingStart</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">TypingStart</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">UnavailableGuild</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">UnavailableGuild</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">UserUpdate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">UserUpdate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">VoiceServerUpdate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">VoiceServerUpdate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">VoiceStateUpdate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">VoiceStateUpdate</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">WebhooksUpdate</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">WebhooksUpdate</span>(<span class="ident">v</span>),
+
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">EventConversionError</span>::<span class="ident">new</span>(<span class="ident">event</span>)),
+        })
+    }
+}
+
 <span class="doccomment">/// Deserialize into a [`DispatchEvent`] by knowing its event name.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// An event name is something like `&quot;CHANNEL_CREATE&quot;` or `&quot;GUILD_MEMBER_ADD&quot;`.</span>
@@ -369,6 +503,11 @@
             }
             <span class="string">&quot;CHANNEL_UPDATE&quot;</span> <span class="op">=&gt;</span> {
                 <span class="ident">DispatchEvent</span>::<span class="ident">ChannelUpdate</span>(<span class="ident">ChannelUpdate</span>::<span class="ident">deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            }
+            <span class="string">&quot;GIFT_CODE_UPDATE&quot;</span> <span class="op">=&gt;</span> {
+                <span class="ident">deserializer</span>.<span class="ident">deserialize_ignored_any</span>(<span class="ident">IgnoredAny</span>)<span class="question-mark">?</span>;
+
+                <span class="ident">DispatchEvent</span>::<span class="ident">GiftCodeUpdate</span>
             }
             <span class="string">&quot;GUILD_BAN_ADD&quot;</span> <span class="op">=&gt;</span> <span class="ident">DispatchEvent</span>::<span class="ident">BanAdd</span>(<span class="ident">BanAdd</span>::<span class="ident">deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>),
             <span class="string">&quot;GUILD_BAN_REMOVE&quot;</span> <span class="op">=&gt;</span> <span class="ident">DispatchEvent</span>::<span class="ident">BanRemove</span>(<span class="ident">BanRemove</span>::<span class="ident">deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>),
@@ -467,6 +606,27 @@
             }
             <span class="ident">other</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError</span>::<span class="ident">unknown_variant</span>(<span class="ident">other</span>, <span class="kw-2">&amp;</span>[])),
         })
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">DispatchEvent</span>, <span class="ident">DispatchEventWithTypeDeserializer</span>};
+    <span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">de</span>::<span class="ident">DeserializeSeed</span>;
+    <span class="kw">use</span> <span class="ident">serde_json</span>::<span class="ident">Deserializer</span>;
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_gift_code_update</span>() {
+        <span class="comment">// Input will be ignored so long as it&#39;s valid JSON.</span>
+        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">r#&quot;{
+            &quot;a&quot;: &quot;b&quot;
+        }&quot;#</span>;
+
+        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">DispatchEventWithTypeDeserializer</span>::<span class="ident">new</span>(<span class="string">&quot;GIFT_CODE_UPDATE&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer</span>::<span class="ident">from_str</span>(<span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">event</span>, <span class="ident">DispatchEvent</span>::<span class="ident">GiftCodeUpdate</span>);
     }
 }
 </pre></div>

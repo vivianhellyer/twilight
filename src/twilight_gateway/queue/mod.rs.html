@@ -95,8 +95,6 @@
 <span id="95">95</span>
 <span id="96">96</span>
 <span id="97">97</span>
-<span id="98">98</span>
-<span id="99">99</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">mod</span> <span class="ident">day_limiter</span>;
 <span class="kw">mod</span> <span class="ident">large_bot_queue</span>;
@@ -112,9 +110,6 @@
 <span class="kw">use</span> <span class="ident">futures_util</span>::{<span class="ident">sink</span>::<span class="ident">SinkExt</span>, <span class="ident">stream</span>::<span class="ident">StreamExt</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt</span>::<span class="ident">Debug</span>, <span class="ident">time</span>::<span class="ident">Duration</span>};
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">time</span>::<span class="ident">delay_for</span>;
-
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_imports</span>)]</span>
-<span class="kw">use</span> <span class="ident">tracing</span>::{<span class="ident">info</span>, <span class="ident">warn</span>};
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Queue</span>: <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> {
@@ -145,8 +140,9 @@
 <span class="doccomment">/// If you can&#39;t use this, look into an alternative implementation of the</span>
 <span class="doccomment">/// [`Queue`], such as the [`gateway-queue`] broker.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// [`LargeBotQueue`]: ./queue/struct.LargeBotQueue.html</span>
+<span class="doccomment">/// [`LargeBotQueue`]: ./struct.LargeBotQueue.html</span>
 <span class="doccomment">/// [`Cluster`]: ../cluster/struct.Cluster.html</span>
+<span class="doccomment">/// [`Queue`]: trait.Queue.html</span>
 <span class="doccomment">/// [`Shard`]: ../shard/struct.Shard.html</span>
 <span class="doccomment">/// [`gateway-queue`]: https://github.com/twilight-rs/gateway-queue</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
@@ -173,7 +169,7 @@
     <span class="kw">const</span> <span class="ident">DUR</span>: <span class="ident">Duration</span> <span class="op">=</span> <span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">6</span>);
     <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">req</span>) <span class="op">=</span> <span class="ident">rx</span>.<span class="ident">next</span>().<span class="kw">await</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">req</span>.<span class="ident">send</span>(()) {
-            <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;[LocalQueue/waiter] send failed with: {:?}, skipping&quot;</span>, <span class="ident">err</span>);
+            <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;skipping, send failed: {:?}&quot;</span>, <span class="ident">err</span>);
         }
         <span class="ident">delay_for</span>(<span class="ident">DUR</span>).<span class="kw">await</span>;
     }
@@ -184,15 +180,15 @@
     <span class="doccomment">/// Request to be able to identify with the gateway. This will place this</span>
     <span class="doccomment">/// request behind all other requests, and the returned future will resolve</span>
     <span class="doccomment">/// once the request has been completed.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: [<span class="ident">u64</span>; <span class="number">2</span>]) {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, [<span class="ident">id</span>, <span class="ident">total</span>]: [<span class="ident">u64</span>; <span class="number">2</span>]) {
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot</span>::<span class="ident">channel</span>();
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>().<span class="ident">send</span>(<span class="ident">tx</span>).<span class="kw">await</span> {
-            <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;[LocalQueue] send failed with: {:?}, skipping&quot;</span>, <span class="ident">err</span>);
+            <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;skipping, send failed: {:?}&quot;</span>, <span class="ident">err</span>);
             <span class="kw">return</span>;
         }
 
-        <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Waiting for allowance!&quot;</span>);
+        <span class="ident">tracing</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;shard {}/{} waiting for allowance&quot;</span>, <span class="ident">id</span>, <span class="ident">total</span>);
 
         <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">rx</span>.<span class="kw">await</span>;
     }

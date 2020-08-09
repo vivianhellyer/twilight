@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["UpdateGuildError","The error returned when the guild can not be updated as configured."]],"struct":[["UpdateGuild","Update a guild."]]});

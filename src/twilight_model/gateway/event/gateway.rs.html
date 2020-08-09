@@ -862,8 +862,25 @@
 <span id="862">862</span>
 <span id="863">863</span>
 <span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
+<span id="872">872</span>
+<span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="kw">super</span>::<span class="ident">OpCode</span>, <span class="ident">DispatchEvent</span>, <span class="ident">DispatchEventWithTypeDeserializer</span>};
+<span class="kw">use</span> <span class="kw">super</span>::{
+    <span class="kw">super</span>::<span class="ident">OpCode</span>, <span class="ident">DispatchEvent</span>, <span class="ident">DispatchEventWithTypeDeserializer</span>, <span class="ident">Event</span>, <span class="ident">EventConversionError</span>,
+};
 <span class="kw">use</span> <span class="ident">serde</span>::{
     <span class="ident">de</span>::{
         <span class="ident">value</span>::<span class="ident">U8Deserializer</span>, <span class="ident">DeserializeSeed</span>, <span class="ident">Deserializer</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DeError</span>, <span class="ident">IgnoredAny</span>,
@@ -872,6 +889,7 @@
     <span class="ident">ser</span>::{<span class="ident">SerializeStruct</span>, <span class="ident">Serializer</span>},
     <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>,
 };
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>};
 
 <span class="doccomment">/// An event from the gateway, which can either be a dispatch event with</span>
@@ -884,6 +902,22 @@
     <span class="ident">Hello</span>(<span class="ident">u64</span>),
     <span class="ident">InvalidateSession</span>(<span class="ident">bool</span>),
     <span class="ident">Reconnect</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GatewayEvent</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">EventConversionError</span>;
+
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">event</span>: <span class="ident">Event</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">event</span> {
+            <span class="ident">Event</span>::<span class="ident">GatewayHeartbeat</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">Heartbeat</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">GatewayHeartbeatAck</span> <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">HeartbeatAck</span>,
+            <span class="ident">Event</span>::<span class="ident">GatewayHello</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">Hello</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">GatewayInvalidateSession</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">InvalidateSession</span>(<span class="ident">v</span>),
+            <span class="ident">Event</span>::<span class="ident">GatewayReconnect</span> <span class="op">=&gt;</span> <span class="self">Self</span>::<span class="ident">Reconnect</span>,
+
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">EventConversionError</span>::<span class="ident">new</span>(<span class="ident">event</span>)),
+        })
+    }
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
@@ -1589,10 +1623,6 @@
                 <span class="ident">Token</span>::<span class="ident">Str</span>(<span class="string">&quot;op&quot;</span>),
                 <span class="ident">Token</span>::<span class="ident">U8</span>(<span class="ident">OpCode</span>::<span class="ident">Event</span> <span class="kw">as</span> <span class="ident">u8</span>),
                 <span class="ident">Token</span>::<span class="ident">Str</span>(<span class="string">&quot;d&quot;</span>),
-                <span class="ident">Token</span>::<span class="ident">NewtypeVariant</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;DispatchEvent&quot;</span>,
-                    <span class="ident">variant</span>: <span class="string">&quot;RoleDelete&quot;</span>,
-                },
                 <span class="ident">Token</span>::<span class="ident">Struct</span> {
                     <span class="ident">name</span>: <span class="string">&quot;RoleDelete&quot;</span>,
                     <span class="ident">len</span>: <span class="number">2</span>,

@@ -120,6 +120,9 @@
 <span id="120">120</span>
 <span id="121">121</span>
 <span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">request</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -132,13 +135,16 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">GetCurrentUserGuildsError</span> {
     <span class="doccomment">/// The maximum number of guilds to retrieve is 0 or more than 100.</span>
-    <span class="ident">LimitInvalid</span>,
+    <span class="ident">LimitInvalid</span> {
+        <span class="doccomment">/// Provided maximum number of guilds to retrieve.</span>
+        <span class="ident">limit</span>: <span class="ident">u64</span>,
+    },
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">GetCurrentUserGuildsError</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="self">Self</span>::<span class="ident">LimitInvalid</span> <span class="op">=&gt;</span> <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;the limit is invalid&quot;</span>),
+            <span class="self">Self</span>::<span class="ident">LimitInvalid</span> { .. } <span class="op">=&gt;</span> <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;the limit is invalid&quot;</span>),
         }
     }
 }
@@ -221,7 +227,7 @@
     <span class="doccomment">/// [the discord docs]: https://discordapp.com/developers/docs/resources/user#get-current-user-guilds-query-string-params</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">limit</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">limit</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">GetCurrentUserGuildsError</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="op">!</span><span class="ident">validate</span>::<span class="ident">get_current_user_guilds_limit</span>(<span class="ident">limit</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">GetCurrentUserGuildsError</span>::<span class="ident">LimitInvalid</span>);
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">GetCurrentUserGuildsError</span>::<span class="ident">LimitInvalid</span> { <span class="ident">limit</span> });
         }
 
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">limit</span>.<span class="ident">replace</span>(<span class="ident">limit</span>);

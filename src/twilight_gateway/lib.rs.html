@@ -112,6 +112,8 @@
 <span id="112">112</span>
 <span id="113">113</span>
 <span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! # twilight-gateway</span>
 <span class="doccomment">//!</span>
@@ -208,11 +210,13 @@
 <span class="kw">mod</span> <span class="ident">event</span>;
 <span class="kw">mod</span> <span class="ident">listener</span>;
 
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">no_inline</span>)]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{
     <span class="ident">cluster</span>::{<span class="ident">Cluster</span>, <span class="ident">ClusterConfig</span>},
     <span class="ident">event</span>::<span class="ident">EventTypeFlags</span>,
     <span class="ident">shard</span>::{<span class="ident">Shard</span>, <span class="ident">ShardConfig</span>},
 };
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">no_inline</span>)]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">twilight_model</span>::<span class="ident">gateway</span>::<span class="ident">event</span>::{<span class="ident">Event</span>, <span class="ident">EventType</span>};
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;simd-json&quot;</span>))]</span>

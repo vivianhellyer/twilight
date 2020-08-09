@@ -151,15 +151,13 @@
 <span id="151">151</span>
 <span id="152">152</span>
 <span id="153">153</span>
-<span id="154">154</span>
-<span id="155">155</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow</span>::<span class="ident">Cow</span>,
     <span class="ident">collections</span>::{<span class="ident">HashMap</span>, <span class="ident">HashSet</span>},
 };
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">CaseSensitivity</span>, <span class="ident">CommandBuilder</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">CaseSensitivity</span>;
 
 <span class="doccomment">/// Configuration for a [`Parser`].</span>
 <span class="doccomment">///</span>
@@ -183,10 +181,10 @@
 
     <span class="doccomment">/// Returns a mutable reference to the commands.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Use the [`add_command`] and [`remove_command`] methods for an easier way</span>
-    <span class="doccomment">/// to manage commands.</span>
+    <span class="doccomment">/// Use the [`command`] and [`remove_command`] methods for an easier way to</span>
+    <span class="doccomment">/// manage commands.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`add_command`]: #method.add_command</span>
+    <span class="doccomment">/// [`command`]: #method.command</span>
     <span class="doccomment">/// [`remove_command`]: #method.remove_command</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">commands_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">CaseSensitivity</span><span class="op">&gt;</span> {
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">commands</span>
@@ -208,28 +206,26 @@
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">prefixes</span>
     }
 
-    <span class="doccomment">/// Returns a [`CommandBuilder`] which can be used to add a command to the list of commands.</span>
+    <span class="doccomment">/// Add a command to the list of commands.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Add a case-sensitive &quot;ping&quot; command:</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```rust</span>
     <span class="doccomment">/// use twilight_command_parser::CommandParserConfig;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let mut config = CommandParserConfig::new();</span>
-    <span class="doccomment">/// config.command(&quot;ping&quot;).add();</span>
+    <span class="doccomment">/// config.add_command(&quot;ping&quot;, true);</span>
     <span class="doccomment">/// assert_eq!(1, config.commands().len());</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`CommandBuilder`]: struct.CommandBuilder.html</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">command</span><span class="op">&lt;</span><span class="lifetime">&#39;b</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> <span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">CommandBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">CommandBuilder</span> {
-            <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">into</span>(),
-            <span class="ident">case_sensitive</span>: <span class="bool-val">false</span>,
-            <span class="ident">config</span>: <span class="self">self</span>,
-        }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_command</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">case_sensitive</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">_add_command</span>(<span class="ident">name</span>.<span class="ident">into</span>(), <span class="ident">case_sensitive</span>)
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">add_command</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">case_sensitive</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">_add_command</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">case_sensitive</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">let</span> <span class="ident">command</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">case_sensitive</span> {
             <span class="ident">CaseSensitivity</span>::<span class="ident">Sensitive</span>(<span class="ident">name</span>)
         } <span class="kw">else</span> {
@@ -248,8 +244,8 @@
     <span class="doccomment">/// use twilight_command_parser::CommandParserConfig;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let mut config = CommandParserConfig::new();</span>
-    <span class="doccomment">/// config.command(&quot;ping&quot;).case_sensitive().add();</span>
-    <span class="doccomment">/// config.command(&quot;PING&quot;).add();</span>
+    <span class="doccomment">/// config.add_command(&quot;ping&quot;, true);</span>
+    <span class="doccomment">/// config.add_command(&quot;PING&quot;, false);</span>
     <span class="doccomment">/// assert_eq!(2, config.commands().len());</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// // Now remove it and verify that there are no commands.</span>

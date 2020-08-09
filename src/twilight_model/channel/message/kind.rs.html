@@ -19,10 +19,45 @@
 <span id="19">19</span>
 <span id="20">20</span>
 <span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
 </pre><div class="example-wrap"><pre class="rust ">
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">channel</span>::<span class="ident">ConversionError</span>;
 <span class="kw">use</span> <span class="ident">serde_repr</span>::{<span class="ident">Deserialize_repr</span>, <span class="ident">Serialize_repr</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize_repr</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">Ord</span>, <span class="ident">PartialEq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Serialize_repr</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(
+    <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize_repr</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">Ord</span>, <span class="ident">PartialEq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Serialize_repr</span>,
+)]</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">u8</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">MessageType</span> {
     <span class="ident">Regular</span> <span class="op">=</span> <span class="number">0</span>,
@@ -40,6 +75,33 @@
     <span class="ident">ChannelFollowAdd</span> <span class="op">=</span> <span class="number">12</span>,
     <span class="ident">GuildDiscoveryDisqualified</span> <span class="op">=</span> <span class="number">14</span>,
     <span class="ident">GuildDiscoveryRequalified</span> <span class="op">=</span> <span class="number">15</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MessageType</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ConversionError</span>;
+
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">value</span>: <span class="ident">u8</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">message_type</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">value</span> {
+            <span class="number">0</span> <span class="op">=&gt;</span> <span class="ident">MessageType</span>::<span class="ident">Regular</span>,
+            <span class="number">1</span> <span class="op">=&gt;</span> <span class="ident">MessageType</span>::<span class="ident">RecipientAdd</span>,
+            <span class="number">2</span> <span class="op">=&gt;</span> <span class="ident">MessageType</span>::<span class="ident">RecipientRemove</span>,
+            <span class="number">3</span> <span class="op">=&gt;</span> <span class="ident">MessageType</span>::<span class="ident">Call</span>,
+            <span class="number">4</span> <span class="op">=&gt;</span> <span class="ident">MessageType</span>::<span class="ident">ChannelNameChange</span>,
+            <span class="number">5</span> <span class="op">=&gt;</span> <span class="ident">MessageType</span>::<span class="ident">ChannelIconChange</span>,
+            <span class="number">6</span> <span class="op">=&gt;</span> <span class="ident">MessageType</span>::<span class="ident">ChannelMessagePinned</span>,
+            <span class="number">7</span> <span class="op">=&gt;</span> <span class="ident">MessageType</span>::<span class="ident">GuildMemberJoin</span>,
+            <span class="number">8</span> <span class="op">=&gt;</span> <span class="ident">MessageType</span>::<span class="ident">UserPremiumSub</span>,
+            <span class="number">9</span> <span class="op">=&gt;</span> <span class="ident">MessageType</span>::<span class="ident">UserPremiumSubTier1</span>,
+            <span class="number">10</span> <span class="op">=&gt;</span> <span class="ident">MessageType</span>::<span class="ident">UserPremiumSubTier2</span>,
+            <span class="number">11</span> <span class="op">=&gt;</span> <span class="ident">MessageType</span>::<span class="ident">UserPremiumSubTier3</span>,
+            <span class="number">12</span> <span class="op">=&gt;</span> <span class="ident">MessageType</span>::<span class="ident">ChannelFollowAdd</span>,
+            <span class="number">14</span> <span class="op">=&gt;</span> <span class="ident">MessageType</span>::<span class="ident">GuildDiscoveryDisqualified</span>,
+            <span class="number">15</span> <span class="op">=&gt;</span> <span class="ident">MessageType</span>::<span class="ident">GuildDiscoveryRequalified</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ConversionError</span>::<span class="ident">MessageType</span>(<span class="ident">value</span>)),
+        };
+
+        <span class="prelude-val">Ok</span>(<span class="ident">message_type</span>)
+    }
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../";window.currentCrate = "twilight_model";</script><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script><script defer src="../../../../search-index.js"></script></body></html>

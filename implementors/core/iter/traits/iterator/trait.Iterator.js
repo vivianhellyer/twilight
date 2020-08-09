@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["twilight_command_parser"] = [{"text":"impl&lt;'a&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html\" title=\"trait core::iter::traits::iterator::Iterator\">Iterator</a> for <a class=\"struct\" href=\"twilight_command_parser/struct.Arguments.html\" title=\"struct twilight_command_parser::Arguments\">Arguments</a>&lt;'a&gt;","synthetic":false,"types":["twilight_command_parser::arguments::Arguments"]}];
+implementors["twilight_command_parser"] = [{"text":"impl&lt;'a&gt; Iterator for Arguments&lt;'a&gt;","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

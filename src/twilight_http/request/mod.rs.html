@@ -222,6 +222,21 @@
 <span id="222">222</span>
 <span id="223">223</span>
 <span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">poll_req</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">ty</span>: <span class="ident">ty</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ret</span>: <span class="ident">ty</span>) <span class="op">=&gt;</span> {
@@ -395,6 +410,21 @@
         <span class="self">Self</span> {
             <span class="ident">body</span>: <span class="prelude-val">Some</span>(<span class="ident">body</span>),
             <span class="ident">form</span>: <span class="prelude-val">None</span>,
+            <span class="ident">headers</span>: <span class="prelude-val">None</span>,
+            <span class="ident">method</span>,
+            <span class="ident">path</span>,
+            <span class="ident">path_str</span>,
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Form</span>, <span class="ident">Route</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Request</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">form</span>, <span class="ident">route</span>): (<span class="ident">Form</span>, <span class="ident">Route</span>)) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> (<span class="ident">method</span>, <span class="ident">path</span>, <span class="ident">path_str</span>) <span class="op">=</span> <span class="ident">route</span>.<span class="ident">into_parts</span>();
+
+        <span class="self">Self</span> {
+            <span class="ident">body</span>: <span class="prelude-val">None</span>,
+            <span class="ident">form</span>: <span class="prelude-val">Some</span>(<span class="ident">form</span>),
             <span class="ident">headers</span>: <span class="prelude-val">None</span>,
             <span class="ident">method</span>,
             <span class="ident">path</span>,

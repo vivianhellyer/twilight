@@ -267,6 +267,35 @@
 <span id="267">267</span>
 <span id="268">268</span>
 <span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">wildcard_imports</span>)]</span>
 
@@ -284,15 +313,17 @@
 
 <span class="kw">use</span> <span class="self">self</span>::<span class="ident">shard</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">payload</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="ident">Debug</span>, <span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>};
 
 <span class="doccomment">/// Any type of event that a shard emits.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This brings together all of the types of [`DispatchEvent`]s,</span>
 <span class="doccomment">/// [`GatewayEvent`]s, and [`ShardEvent`]s.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// [`DispatchEvent`]: struct.DispatchEvent.html</span>
-<span class="doccomment">/// [`GatewayEvent`]: struct.GatewayEvent.html</span>
-<span class="doccomment">/// [`ShardEvent`]: shard/struct.ShardEvent.html</span>
+<span class="doccomment">/// [`DispatchEvent`]: enum.DispatchEvent.html</span>
+<span class="doccomment">/// [`GatewayEvent`]: gateway/enum.GatewayEvent.html</span>
+<span class="doccomment">/// [`ShardEvent`]: shard/enum.ShardEvent.html</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Event</span> {
     <span class="doccomment">/// A user was banned from a guild.</span>
@@ -537,5 +568,32 @@
         }
     }
 }
+
+<span class="doccomment">/// An error that describes a failure to convert</span>
+<span class="doccomment">/// from one event type to another.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EventConversionError</span> {
+    <span class="doccomment">/// The original event</span>
+    <span class="ident">event</span>: <span class="ident">Event</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">EventConversionError</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">event</span>: <span class="ident">Event</span>) <span class="op">-&gt;</span> <span class="ident">EventConversionError</span> {
+        <span class="self">Self</span> { <span class="ident">event</span> }
+    }
+
+    <span class="doccomment">/// Get the original event</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_event</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Event</span> {
+        <span class="self">self</span>.<span class="ident">event</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">EventConversionError</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">FmtResult</span> {
+        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;event variant failed to convert&quot;</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">EventConversionError</span> {}
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../";window.currentCrate = "twilight_model";</script><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script><script defer src="../../../../search-index.js"></script></body></html>

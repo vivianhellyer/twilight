@@ -386,7 +386,7 @@
     <span class="doccomment">/// Returns [`Error::GettingGatewayInfo`] if there was an HTTP error getting</span>
     <span class="doccomment">/// the gateway information.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`Error::GettingGatewayInfo`]: ../error/enum.Error.html#variant.GettingGatewayInfo</span>
+    <span class="doccomment">/// [`Error::GettingGatewayInfo`]: ./error/enum.Error.html#variant.GettingGatewayInfo</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">config</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">ClusterConfig</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="self">Self</span>::<span class="ident">_new</span>(<span class="ident">config</span>.<span class="ident">into</span>()).<span class="kw">await</span>
     }
@@ -478,9 +478,9 @@
     <span class="doccomment">/// Returns [`Error::GettingGatewayInfo`] if the [configured shard scheme]</span>
     <span class="doccomment">/// is [`ShardScheme::Auto`].</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`Error::GettingGatewayInfo`]: enum.Error.html#variant.GettingGatewayInfo</span>
-    <span class="doccomment">/// [`ShardScheme::Auto`]: config/enum.ShardScheme.html#variant.Auto</span>
-    <span class="doccomment">/// [configured shard scheme]: config/struct.ClusterConfig.html#method.shard_scheme</span>
+    <span class="doccomment">/// [`Error::GettingGatewayInfo`]: ./error/enum.Error.html#variant.GettingGatewayInfo</span>
+    <span class="doccomment">/// [`ShardScheme::Auto`]: ./config/enum.ShardScheme.html#variant.Auto</span>
+    <span class="doccomment">/// [configured shard scheme]: ./config/struct.ClusterConfig.html#method.shard_scheme</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">up</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="ident">future</span>::<span class="ident">join_all</span>(
             (<span class="self">self</span>.<span class="number">0</span>.<span class="ident">shard_from</span>..<span class="op">=</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">shard_to</span>)

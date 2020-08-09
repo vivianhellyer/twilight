@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["twilight_command_parser"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html\" title=\"trait core::convert::AsRef\">AsRef</a>&lt;<a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.str.html\">str</a>&gt; for <a class=\"enum\" href=\"twilight_command_parser/enum.CaseSensitivity.html\" title=\"enum twilight_command_parser::CaseSensitivity\">CaseSensitivity</a>","synthetic":false,"types":["twilight_command_parser::casing::CaseSensitivity"]}];
+implementors["twilight_command_parser"] = [{"text":"impl AsRef&lt;str&gt; for CaseSensitivity","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

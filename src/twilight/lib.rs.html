@@ -231,6 +231,9 @@
 <span id="231">231</span>
 <span id="232">232</span>
 <span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! [![license badge][]][license link] [![rust badge]][rust link]</span>
 <span class="doccomment">//!</span>
@@ -316,6 +319,11 @@
 <span class="doccomment">//! These are crates that are officially supported by Twilight, but aren&#39;t</span>
 <span class="doccomment">//! considered core crates due to being vendor-specific or non-essential for most</span>
 <span class="doccomment">//! users.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### `twilight-embed-builder`</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [`twilight-embed-builder`] is a utility crate for creating and validating</span>
+<span class="doccomment">//! message embeds, to be used when creating or updating messages.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ### `twilight-lavalink`</span>
 <span class="doccomment">//!</span>
@@ -441,12 +449,10 @@
 <span class="doccomment">//! [logo]: https://raw.githubusercontent.com/twilight-rs/twilight/trunk/logo.png</span>
 <span class="doccomment">//! [rust badge]: https://img.shields.io/badge/rust-1.40+%20(stable)-93450a.svg?style=flat-square</span>
 <span class="doccomment">//! [rust link]: https://github.com/rust-lang/rust/milestone/66</span>
+<span class="doccomment">//! [`twilight-embed-builder`]: https://github.com/twilight-rs/twilight/tree/trunk/utils/embed-builder</span>
 <span class="doccomment">//! [`twilight-lavalink`]: https://github.com/twilight-rs/twilight/tree/trunk/lavalink</span>
 <span class="doccomment">//! [`twilight-mention`]: https://github.com/twilight-rs/twilight/tree/trunk/utils/mention</span>
 <span class="doccomment">//! [`tracing-log`]: https://github.com/tokio-rs/tracing/tree/master/tracing-log</span>
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;builders&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">twilight_builders</span> <span class="kw">as</span> <span class="ident">builders</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cache&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">twilight_cache</span> <span class="kw">as</span> <span class="ident">cache</span>;

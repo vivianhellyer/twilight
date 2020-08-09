@@ -285,8 +285,8 @@
 <span class="doccomment">/// use twilight_command_parser::{Command, CommandParserConfig, Parser};</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let mut config = CommandParserConfig::new();</span>
-<span class="doccomment">/// config.command(&quot;echo&quot;).add();</span>
-<span class="doccomment">/// config.command(&quot;ping&quot;).add();</span>
+<span class="doccomment">/// config.add_command(&quot;echo&quot;, false);</span>
+<span class="doccomment">/// config.add_command(&quot;ping&quot;, false);</span>
 <span class="doccomment">/// config.add_prefix(&quot;!&quot;);</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let parser = Parser::new(config);</span>
@@ -400,7 +400,7 @@
     <span class="kw">fn</span> <span class="ident">simple_config</span>() <span class="op">-&gt;</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">config</span> <span class="op">=</span> <span class="ident">CommandParserConfig</span>::<span class="ident">new</span>();
         <span class="ident">config</span>.<span class="ident">add_prefix</span>(<span class="string">&quot;!&quot;</span>);
-        <span class="ident">config</span>.<span class="ident">command</span>(<span class="string">&quot;echo&quot;</span>).<span class="ident">add</span>();
+        <span class="ident">config</span>.<span class="ident">add_command</span>(<span class="string">&quot;echo&quot;</span>, <span class="bool-val">false</span>);
 
         <span class="ident">Parser</span>::<span class="ident">new</span>(<span class="ident">config</span>)
     }
@@ -430,7 +430,7 @@
         );
 
         <span class="comment">// Case insensitive - Unicode</span>
-        <span class="ident">parser</span>.<span class="ident">config</span>.<span class="ident">command</span>(<span class="string">&quot;wei\u{df}&quot;</span>).<span class="ident">add</span>();
+        <span class="ident">parser</span>.<span class="ident">config</span>.<span class="ident">add_command</span>(<span class="string">&quot;wei\u{df}&quot;</span>, <span class="bool-val">false</span>);
         <span class="kw">let</span> <span class="ident">Command</span> { <span class="ident">name</span>, .. } <span class="op">=</span> <span class="ident">parser</span>
             .<span class="ident">parse</span>(<span class="ident">message_unicode</span>)
             .<span class="ident">expect</span>(<span class="string">&quot;Parser is case sensitive&quot;</span>);
@@ -439,7 +439,7 @@
             <span class="string">&quot;Command name should have the same case as in the CommandParserConfig&quot;</span>
         );
 
-        <span class="ident">parser</span>.<span class="ident">config</span>.<span class="ident">command</span>(<span class="string">&quot;\u{394}&quot;</span>).<span class="ident">add</span>();
+        <span class="ident">parser</span>.<span class="ident">config</span>.<span class="ident">add_command</span>(<span class="string">&quot;\u{394}&quot;</span>, <span class="bool-val">false</span>);
         <span class="kw">let</span> <span class="ident">Command</span> { <span class="ident">name</span>, .. } <span class="op">=</span> <span class="ident">parser</span>
             .<span class="ident">parse</span>(<span class="ident">message_unicode_2</span>)
             .<span class="ident">expect</span>(<span class="string">&quot;Parser is case sensitive&quot;</span>);
@@ -451,9 +451,9 @@
         <span class="comment">// Case sensitive</span>
         <span class="kw">let</span> <span class="ident">config</span> <span class="op">=</span> <span class="ident">parser</span>.<span class="ident">config_mut</span>();
         <span class="ident">config</span>.<span class="ident">commands_mut</span>().<span class="ident">clear</span>();
-        <span class="ident">config</span>.<span class="ident">command</span>(<span class="string">&quot;echo&quot;</span>).<span class="ident">case_sensitive</span>().<span class="ident">add</span>();
-        <span class="ident">config</span>.<span class="ident">command</span>(<span class="string">&quot;wei\u{df}&quot;</span>).<span class="ident">case_sensitive</span>().<span class="ident">add</span>();
-        <span class="ident">config</span>.<span class="ident">command</span>(<span class="string">&quot;\u{394}&quot;</span>).<span class="ident">case_sensitive</span>().<span class="ident">add</span>();
+        <span class="ident">config</span>.<span class="ident">add_command</span>(<span class="string">&quot;echo&quot;</span>, <span class="bool-val">true</span>);
+        <span class="ident">config</span>.<span class="ident">add_command</span>(<span class="string">&quot;wei\u{df}&quot;</span>, <span class="bool-val">true</span>);
+        <span class="ident">config</span>.<span class="ident">add_command</span>(<span class="string">&quot;\u{394}&quot;</span>, <span class="bool-val">true</span>);
         <span class="macro">assert</span><span class="macro">!</span>(
             <span class="ident">parser</span>.<span class="ident">parse</span>(<span class="ident">message_ascii</span>).<span class="ident">is_none</span>(),
             <span class="string">&quot;Parser is not case sensitive&quot;</span>
@@ -490,7 +490,7 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_unicode_command</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">simple_config</span>();
-        <span class="ident">parser</span>.<span class="ident">config_mut</span>().<span class="ident">command</span>(<span class="string">&quot;\u{1f44e}&quot;</span>).<span class="ident">add</span>(); <span class="comment">// thumbs down unicode</span>
+        <span class="ident">parser</span>.<span class="ident">config_mut</span>().<span class="ident">add_command</span>(<span class="string">&quot;\u{1f44e}&quot;</span>, <span class="bool-val">false</span>);
 
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">parse</span>(<span class="string">&quot;!\u{1f44e}&quot;</span>).<span class="ident">is_some</span>());
     }

@@ -854,17 +854,6 @@
 <span id="854">854</span>
 <span id="855">855</span>
 <span id="856">856</span>
-<span id="857">857</span>
-<span id="858">858</span>
-<span id="859">859</span>
-<span id="860">860</span>
-<span id="861">861</span>
-<span id="862">862</span>
-<span id="863">863</span>
-<span id="864">864</span>
-<span id="865">865</span>
-<span id="866">866</span>
-<span id="867">867</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">config</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">model</span>;
@@ -948,10 +937,8 @@
 
 <span class="doccomment">/// Error type for [`InMemoryCache`] operations.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// Currently this is empty as no error can occur. This exists only to satisfy</span>
-<span class="doccomment">/// the `Cache`&#39;s associated type [`Cache::Error`].</span>
+<span class="doccomment">/// Currently this is empty as no error can occur.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// [`Cache::Error`]: trait.Cache.html#type.Error</span>
 <span class="doccomment">/// [`InMemoryCache`]: struct.InMemoryCache.html</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">InMemoryCacheError</span> {}
@@ -990,9 +977,8 @@
 <span class="doccomment">/// A thread-safe, in-memory-process cache of Discord data. It can be cloned and</span>
 <span class="doccomment">/// sent to other threads.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// This is an implementation of [`Cache`] designed to be used by only the</span>
-<span class="doccomment">/// current process. If the cache needs to be used by other processes, consider</span>
-<span class="doccomment">/// using [`twilight-cache-redis`] or another cache.</span>
+<span class="doccomment">/// This is an implementation of a cache designed to be used by only the</span>
+<span class="doccomment">/// current process.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Public Immutability</span>
 <span class="doccomment">///</span>
@@ -1023,18 +1009,10 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// - the &quot;last message id&quot; field of channels will *not* be kept up to date as</span>
 <span class="doccomment">/// - messages come in.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`Cache`]: trait.Cache.html</span>
-<span class="doccomment">/// [`twilight-cache-redis`]: https://github.com/twilight-rs/cache-redis</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Default</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InMemoryCache</span>(<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">InMemoryCacheRef</span><span class="op">&gt;</span>);
 
 <span class="doccomment">/// Implemented methods and types for the cache.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// **Note**: This section may *appear* empty. Please read the implementation</span>
-<span class="doccomment">/// in the [`Cache` trait implementation].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`Cache` trait implementation]: #impl-Cache</span>
 <span class="kw">impl</span> <span class="ident">InMemoryCache</span> {
     <span class="doccomment">/// Creates a new, empty cache.</span>
     <span class="doccomment">///</span>

@@ -783,15 +783,11 @@
 <span id="783">783</span>
 <span id="784">784</span>
 <span id="785">785</span>
-<span id="786">786</span>
-<span id="787">787</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">config</span>::<span class="ident">EventType</span>, <span class="ident">InMemoryCache</span>, <span class="ident">InMemoryCacheError</span>};
 <span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
 <span class="kw">use</span> <span class="ident">dashmap</span>::<span class="ident">DashMap</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections</span>::<span class="ident">HashSet</span>, <span class="ident">hash</span>::<span class="ident">Hash</span>, <span class="ident">ops</span>::<span class="ident">Deref</span>, <span class="ident">sync</span>::<span class="ident">Arc</span>};
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_imports</span>)]</span>
-<span class="kw">use</span> <span class="ident">tracing</span>::<span class="ident">debug</span>;
 <span class="kw">use</span> <span class="ident">twilight_cache_trait</span>::<span class="ident">UpdateCache</span>;
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">channel</span>::{<span class="ident">message</span>::<span class="ident">MessageReaction</span>, <span class="ident">Channel</span>, <span class="ident">GuildChannel</span>},

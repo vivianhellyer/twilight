@@ -64,65 +64,63 @@
 <span id="64">64</span>
 <span id="65">65</span>
 <span id="66">66</span>
-<span id="67">67</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="doccomment">//! The [`Cluster`] is a manager for running and maintaing multiple shards,</span>
-<span class="doccomment">//! bringing their event streams into one unified stream.</span>
+<span class="doccomment">//! The cluster is a manager for running and maintaing multiple shards, bringing</span>
+<span class="doccomment">//! their event streams into one unified stream.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Examples</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Start a cluster of 10 shards and print when a shard is connected,</span>
 <span class="doccomment">//! disconnected, and when new commands come in:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```no_run</span>
-<span class="doccomment">/// use twilight_gateway::{cluster::{Cluster, ClusterConfig}, Event};</span>
-<span class="doccomment">/// use futures::StreamExt;</span>
-<span class="doccomment">/// use std::env;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// #[tokio::main]</span>
-<span class="doccomment">/// async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error + Send + Sync&gt;&gt; {</span>
-<span class="doccomment">///     let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
-<span class="doccomment">///     let cluster = Cluster::new(token).await?;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///     cluster.up().await;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///     let mut events = cluster.events().await;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///     while let Some((shard_id, event)) = events.next().await {</span>
-<span class="doccomment">///         tokio::spawn(handle_event(cluster.clone(), shard_id, event));</span>
-<span class="doccomment">///     }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///     println!(&quot;Cluster is now shutdown&quot;);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///     Ok(())</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// async fn handle_event(cluster: Cluster, shard_id: u64, event: Event) {</span>
-<span class="doccomment">///     match event {</span>
-<span class="doccomment">///         Event::ShardConnected { .. } =&gt; {</span>
-<span class="doccomment">///             println!(&quot;Shard {} is now connected&quot;, shard_id);</span>
-<span class="doccomment">///         },</span>
-<span class="doccomment">///         Event::ShardDisconnected { .. } =&gt; {</span>
-<span class="doccomment">///             println!(&quot;Shard {} is now disconnected&quot;, shard_id);</span>
-<span class="doccomment">///         },</span>
-<span class="doccomment">///         Event::MessageCreate(msg) if msg.content == &quot;!latency&quot; =&gt; {</span>
-<span class="doccomment">///             if let Some(shard) = cluster.shard(shard_id).await {</span>
-<span class="doccomment">///                 if let Ok(info) = shard.info().await {</span>
-<span class="doccomment">///                     println!(&quot;Shard {}&#39;s latency is {:?}&quot;, shard_id, info.latency());</span>
-<span class="doccomment">///                 }</span>
-<span class="doccomment">///             }</span>
-<span class="doccomment">///         },</span>
-<span class="doccomment">///         Event::MessageCreate(msg) if msg.content == &quot;!shutdown&quot; =&gt; {</span>
-<span class="doccomment">///             println!(&quot;Got a shutdown request from shard {}&quot;, shard_id);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///             cluster.down().await;</span>
-<span class="doccomment">///         },</span>
-<span class="doccomment">///         _ =&gt; {},</span>
-<span class="doccomment">///     }</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`Cluster`]: struct.Cluster.html</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```no_run</span>
+<span class="doccomment">//! use twilight_gateway::{cluster::{Cluster, ClusterConfig}, Event};</span>
+<span class="doccomment">//! use futures::StreamExt;</span>
+<span class="doccomment">//! use std::env;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #[tokio::main]</span>
+<span class="doccomment">//! async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error + Send + Sync&gt;&gt; {</span>
+<span class="doccomment">//!     let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
+<span class="doccomment">//!     let cluster = Cluster::new(token).await?;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     cluster.up().await;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     let mut events = cluster.events().await;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     while let Some((shard_id, event)) = events.next().await {</span>
+<span class="doccomment">//!         tokio::spawn(handle_event(cluster.clone(), shard_id, event));</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     println!(&quot;Cluster is now shutdown&quot;);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     Ok(())</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! async fn handle_event(cluster: Cluster, shard_id: u64, event: Event) {</span>
+<span class="doccomment">//!     match event {</span>
+<span class="doccomment">//!         Event::ShardConnected { .. } =&gt; {</span>
+<span class="doccomment">//!             println!(&quot;Shard {} is now connected&quot;, shard_id);</span>
+<span class="doccomment">//!         },</span>
+<span class="doccomment">//!         Event::ShardDisconnected { .. } =&gt; {</span>
+<span class="doccomment">//!             println!(&quot;Shard {} is now disconnected&quot;, shard_id);</span>
+<span class="doccomment">//!         },</span>
+<span class="doccomment">//!         Event::MessageCreate(msg) if msg.content == &quot;!latency&quot; =&gt; {</span>
+<span class="doccomment">//!             if let Some(shard) = cluster.shard(shard_id).await {</span>
+<span class="doccomment">//!                 if let Ok(info) = shard.info().await {</span>
+<span class="doccomment">//!                     println!(&quot;Shard {}&#39;s latency is {:?}&quot;, shard_id, info.latency());</span>
+<span class="doccomment">//!                 }</span>
+<span class="doccomment">//!             }</span>
+<span class="doccomment">//!         },</span>
+<span class="doccomment">//!         Event::MessageCreate(msg) if msg.content == &quot;!shutdown&quot; =&gt; {</span>
+<span class="doccomment">//!             println!(&quot;Got a shutdown request from shard {}&quot;, shard_id);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!             cluster.down().await;</span>
+<span class="doccomment">//!         },</span>
+<span class="doccomment">//!         _ =&gt; {},</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">config</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">error</span>;
 

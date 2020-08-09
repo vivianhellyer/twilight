@@ -44,6 +44,7 @@
 <span id="44">44</span>
 <span id="45">45</span>
 <span id="46">46</span>
+<span id="47">47</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Types for working with and running connections to the gateway.</span>
 <span class="doccomment">//!</span>
@@ -61,13 +62,14 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [`ShardConfig`]: config/struct.ShardConfig.html</span>
 <span class="doccomment">//! [`ShardConfigBuilder`]: config/struct.ShardConfigBuilder.html</span>
-<span class="doccomment">//! [`Event`]: event/enum.Event.html</span>
+<span class="doccomment">//! [`Event`]: ../../twilight_model/gateway/event/enum.Event.html</span>
 <span class="doccomment">//! [`Shard`]: struct.Shard.html</span>
-<span class="doccomment">//! [`Stage`]: enum.Stage.html</span>
-<span class="doccomment">//! [`Disconnected`]: enum.Stage.html#variant.Disconnected</span>
-<span class="doccomment">//! [`Resuming`]: enum.Stage.html#variant.Resuming</span>
-<span class="doccomment">//! [channel deletions]: event/enum.Event.html#variant.ChannelDelete</span>
-<span class="doccomment">//! [new messages]: event/enum.Event.html#variant.MessageCreate</span>
+<span class="doccomment">//! [`Stage`]: stage/enum.Stage.html</span>
+<span class="doccomment">//! [`Disconnected`]: stage/enum.Stage.html#variant.Disconnected</span>
+<span class="doccomment">//! [`Resuming`]: stage/enum.Stage.html#variant.Resuming</span>
+<span class="doccomment">//! [channel deletions]: ../../twilight_model/gateway/event/enum.Event.html#variant.ChannelDelete</span>
+<span class="doccomment">//! [information about itself]: struct.Shard.html#method.info</span>
+<span class="doccomment">//! [new messages]: ../../twilight_model/gateway/event/enum.Event.html#variant.MessageCreate</span>
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">config</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">error</span>;

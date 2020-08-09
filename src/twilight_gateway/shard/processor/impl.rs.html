@@ -631,11 +631,6 @@
 <span id="631">631</span>
 <span id="632">632</span>
 <span id="633">633</span>
-<span id="634">634</span>
-<span id="635">635</span>
-<span id="636">636</span>
-<span id="637">637</span>
-<span id="638">638</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::{
     <span class="kw">super</span>::{<span class="ident">config</span>::<span class="ident">ShardConfig</span>, <span class="ident">stage</span>::<span class="ident">Stage</span>, <span class="ident">ShardStream</span>},
@@ -664,8 +659,6 @@
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">sync</span>::<span class="ident">watch</span>::{
     <span class="ident">channel</span> <span class="kw">as</span> <span class="ident">watch_channel</span>, <span class="ident">Receiver</span> <span class="kw">as</span> <span class="ident">WatchReceiver</span>, <span class="ident">Sender</span> <span class="kw">as</span> <span class="ident">WatchSender</span>,
 };
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_imports</span>)]</span>
-<span class="kw">use</span> <span class="ident">tracing</span>::{<span class="ident">debug</span>, <span class="ident">info</span>, <span class="ident">trace</span>, <span class="ident">warn</span>};
 <span class="kw">use</span> <span class="ident">twilight_model</span>::<span class="ident">gateway</span>::{
     <span class="ident">event</span>::{
         <span class="ident">shard</span>::{<span class="ident">Connected</span>, <span class="ident">Connecting</span>, <span class="ident">Disconnected</span>, <span class="ident">Identifying</span>, <span class="ident">Reconnecting</span>, <span class="ident">Resuming</span>},
@@ -703,10 +696,10 @@
         <span class="kw">let</span> <span class="ident">shard_id</span> <span class="op">=</span> <span class="ident">config</span>.<span class="ident">shard</span>();
         <span class="kw">let</span> <span class="ident">resumable</span> <span class="op">=</span> <span class="ident">config</span>.<span class="ident">sequence</span>.<span class="ident">is_some</span>() <span class="op">&amp;&amp;</span> <span class="ident">config</span>.<span class="ident">session_id</span>.<span class="ident">is_some</span>();
         <span class="kw">if</span> <span class="op">!</span><span class="ident">resumable</span> {
-            <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Shard {:?} is not resumable&quot;</span>, <span class="ident">shard_id</span>);
-            <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[ShardProcessor {:?}] Queueing&quot;</span>, <span class="ident">shard_id</span>);
+            <span class="ident">tracing</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;shard {:?} is not resumable&quot;</span>, <span class="ident">shard_id</span>);
+            <span class="ident">tracing</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;shard {:?} queued&quot;</span>, <span class="ident">shard_id</span>);
             <span class="ident">config</span>.<span class="ident">queue</span>.<span class="ident">request</span>(<span class="ident">shard_id</span>).<span class="kw">await</span>;
-            <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[ShardProcessor {:?}] Finished queue&quot;</span>, <span class="ident">config</span>.<span class="ident">shard</span>());
+            <span class="ident">tracing</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;shard {:?} finished queue&quot;</span>, <span class="ident">config</span>.<span class="ident">shard</span>());
         }
 
         <span class="kw">let</span> <span class="ident">properties</span> <span class="op">=</span> <span class="ident">IdentifyProperties</span>::<span class="ident">new</span>(<span class="string">&quot;twilight.rs&quot;</span>, <span class="string">&quot;twilight.rs&quot;</span>, <span class="ident">OS</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>);
@@ -753,7 +746,7 @@
         };
 
         <span class="kw">if</span> <span class="ident">resumable</span> {
-            <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Shard {:?} resuming&quot;</span>, <span class="ident">shard_id</span>);
+            <span class="ident">tracing</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;resuming shard {:?}&quot;</span>, <span class="ident">shard_id</span>);
             <span class="ident">processor</span>.<span class="ident">resume</span>().<span class="kw">await</span><span class="question-mark">?</span>;
         }
 
@@ -766,18 +759,15 @@
                 <span class="prelude-val">Ok</span>(<span class="ident">ev</span>) <span class="op">=&gt;</span> <span class="ident">ev</span>,
                 <span class="comment">// The authorization is invalid, so we should just quit.</span>
                 <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">AuthorizationInvalid</span> { <span class="ident">shard_id</span>, .. }) <span class="op">=&gt;</span> {
-                    <span class="macro">warn</span><span class="macro">!</span>(
-                        <span class="string">&quot;The authorization for shard {} is invalid, quitting&quot;</span>,
-                        <span class="ident">shard_id</span>
-                    );
+                    <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;authorization for shard {} is invalid, quitting&quot;</span>, <span class="ident">shard_id</span>);
                     <span class="self">self</span>.<span class="ident">listeners</span>.<span class="ident">remove_all</span>();
 
                     <span class="kw">return</span>;
                 }
                 <span class="comment">// Reconnect as this error is often fatal!</span>
                 <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Decompressing</span> { <span class="ident">source</span> }) <span class="op">=&gt;</span> {
-                    <span class="macro">warn</span><span class="macro">!</span>(
-                        <span class="string">&quot;[gateway] Decompressing error, clears buffers and reconnect! {:?}&quot;</span>,
+                    <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(
+                        <span class="string">&quot;decompressing failed, clearing buffers and reconnecting: {:?}&quot;</span>,
                         <span class="ident">source</span>
                     );
 
@@ -786,23 +776,23 @@
                     <span class="kw">continue</span>;
                 }
                 <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">IntentsDisallowed</span> { <span class="ident">shard_id</span>, .. }) <span class="op">=&gt;</span> {
-                    <span class="macro">warn</span><span class="macro">!</span>(
-                        <span class="string">&quot;At least one of the provided intents for shard {} are disallowed&quot;</span>,
+                    <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(
+                        <span class="string">&quot;at least one of the provided intents for shard {} are disallowed&quot;</span>,
                         <span class="ident">shard_id</span>
                     );
                     <span class="self">self</span>.<span class="ident">listeners</span>.<span class="ident">remove_all</span>();
                     <span class="kw">return</span>;
                 }
                 <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">IntentsInvalid</span> { <span class="ident">shard_id</span>, .. }) <span class="op">=&gt;</span> {
-                    <span class="macro">warn</span><span class="macro">!</span>(
-                        <span class="string">&quot;At least one of the provided intents for shard {} are invalid&quot;</span>,
+                    <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(
+                        <span class="string">&quot;at least one of the provided intents for shard {} are invalid&quot;</span>,
                         <span class="ident">shard_id</span>
                     );
                     <span class="self">self</span>.<span class="ident">listeners</span>.<span class="ident">remove_all</span>();
                     <span class="kw">return</span>;
                 }
                 <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> {
-                    <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Error receiving gateway event: {:?}&quot;</span>, <span class="ident">err</span>.<span class="ident">source</span>());
+                    <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;error receiving gateway event: {:?}&quot;</span>, <span class="ident">err</span>.<span class="ident">source</span>());
                     <span class="kw">continue</span>;
                 }
             };
@@ -811,7 +801,7 @@
             <span class="comment">// message or if the session didn&#39;t exist when it should, so do a</span>
             <span class="comment">// reconnect if this fails.</span>
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">gateway_event</span>).<span class="kw">await</span>.<span class="ident">is_err</span>() {
-                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Error processing event; reconnecting&quot;</span>);
+                <span class="ident">tracing</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;error processing event; reconnecting&quot;</span>);
 
                 <span class="self">self</span>.<span class="ident">reconnect</span>(<span class="bool-val">true</span>).<span class="kw">await</span>;
 
@@ -897,7 +887,7 @@
                 }
 
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">heartbeat</span>() {
-                    <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Error sending heartbeat; reconnecting: {}&quot;</span>, <span class="ident">err</span>);
+                    <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;error sending heartbeat; reconnecting: {}&quot;</span>, <span class="ident">err</span>);
 
                     <span class="self">self</span>.<span class="ident">reconnect</span>(<span class="bool-val">true</span>).<span class="kw">await</span>;
                 }
@@ -905,13 +895,13 @@
             <span class="ident">Hello</span>(<span class="ident">interval</span>) <span class="op">=&gt;</span> {
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;metrics&quot;</span>)]</span>
                 <span class="ident">metrics</span>::<span class="macro">counter</span><span class="macro">!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot;</span> <span class="op">=&gt;</span> <span class="string">&quot;Hello&quot;</span>);
-                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[EVENT] Hello({})&quot;</span>, <span class="ident">interval</span>);
+                <span class="ident">tracing</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;got hello with interval {}&quot;</span>, <span class="ident">interval</span>);
 
                 <span class="kw">if</span> <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">stage</span>() <span class="op">==</span> <span class="ident">Stage</span>::<span class="ident">Resuming</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">resume</span>.<span class="ident">is_some</span>() {
                     <span class="comment">// Safe to unwrap so here as we have just checked that</span>
                     <span class="comment">// it is some.</span>
                     <span class="kw">let</span> (<span class="ident">seq</span>, <span class="ident">id</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">resume</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
-                    <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Resuming with ({}, {})!&quot;</span>, <span class="ident">seq</span>, <span class="ident">id</span>);
+                    <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;resuming with sequence {}, session id {}&quot;</span>, <span class="ident">seq</span>, <span class="ident">id</span>);
                     <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">Resume</span>::<span class="ident">new</span>(<span class="ident">seq</span>, <span class="kw-2">&amp;</span><span class="ident">id</span>, <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">token</span>());
 
                     <span class="comment">// Set id so it is correct for next resume.</span>
@@ -942,19 +932,19 @@
             <span class="ident">InvalidateSession</span>(<span class="bool-val">true</span>) <span class="op">=&gt;</span> {
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;metrics&quot;</span>)]</span>
                 <span class="ident">metrics</span>::<span class="macro">counter</span><span class="macro">!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot;</span> <span class="op">=&gt;</span> <span class="string">&quot;InvalidateSessionTrue&quot;</span>);
-                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[EVENT] InvalidateSession(true)&quot;</span>);
+                <span class="ident">tracing</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;got request to resume the session&quot;</span>);
                 <span class="self">self</span>.<span class="ident">resume</span>().<span class="kw">await</span><span class="question-mark">?</span>;
             }
             <span class="ident">InvalidateSession</span>(<span class="bool-val">false</span>) <span class="op">=&gt;</span> {
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;metrics&quot;</span>)]</span>
                 <span class="ident">metrics</span>::<span class="macro">counter</span><span class="macro">!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot;</span> <span class="op">=&gt;</span> <span class="string">&quot;InvalidateSessionFalse&quot;</span>);
-                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[EVENT] InvalidateSession(false)&quot;</span>);
+                <span class="ident">tracing</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;got request to invalidate the session and reconnect&quot;</span>);
                 <span class="self">self</span>.<span class="ident">reconnect</span>(<span class="bool-val">true</span>).<span class="kw">await</span>;
             }
             <span class="ident">Reconnect</span> <span class="op">=&gt;</span> {
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;metrics&quot;</span>)]</span>
                 <span class="ident">metrics</span>::<span class="macro">counter</span><span class="macro">!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot;</span> <span class="op">=&gt;</span> <span class="string">&quot;Reconnect&quot;</span>);
-                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[EVENT] Reconnect&quot;</span>);
+                <span class="ident">tracing</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;got request to reconnect&quot;</span>);
                 <span class="kw">let</span> <span class="ident">frame</span> <span class="op">=</span> <span class="ident">CloseFrame</span> {
                     <span class="ident">code</span>: <span class="ident">CloseCode</span>::<span class="ident">Restart</span>,
                     <span class="ident">reason</span>: <span class="ident">Cow</span>::<span class="ident">Borrowed</span>(<span class="string">&quot;Reconnecting&quot;</span>),
@@ -968,7 +958,7 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reconnect</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">full_reconnect</span>: <span class="ident">bool</span>) {
-        <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;[reconnect] Reconnection started!&quot;</span>);
+        <span class="ident">tracing</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;reconnection started&quot;</span>);
         <span class="kw">loop</span> {
             <span class="comment">// Await allowance if doing a full reconnect</span>
             <span class="kw">if</span> <span class="ident">full_reconnect</span> {
@@ -996,7 +986,7 @@
             <span class="kw">let</span> <span class="ident">new_stream</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">Self</span>::<span class="ident">connect</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">url</span>).<span class="kw">await</span> {
                 <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">s</span>,
                 <span class="prelude-val">Err</span>(<span class="ident">why</span>) <span class="op">=&gt;</span> {
-                    <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Error reconnecting: {:?}&quot;</span>, <span class="ident">why</span>);
+                    <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;reconnecting failed: {:?}&quot;</span>, <span class="ident">why</span>);
                     <span class="kw">continue</span>;
                 }
             };
@@ -1011,15 +1001,15 @@
             <span class="kw">match</span> <span class="self">self</span>.<span class="ident">wtx</span>.<span class="ident">broadcast</span>(<span class="ident">Arc</span>::<span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">session</span>)) {
                 <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> (),
                 <span class="prelude-val">Err</span>(<span class="ident">why</span>) <span class="op">=&gt;</span> {
-                    <span class="macro">warn</span><span class="macro">!</span>(
-                        <span class="string">&quot;Broadcast of new session failed, \
-                         This should not happen, please open \
-                         a issue on the repo. {}&quot;</span>,
+                    <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(
+                        <span class="string">&quot;broadcast of new session failed, \
+                         this should not happen, please open \
+                         an issue on the twilight repo: {}&quot;</span>,
                         <span class="ident">why</span>
                     );
-                    <span class="macro">warn</span><span class="macro">!</span>(
-                        <span class="string">&quot;After this many of the commands on the \
-                         shard will no longer work.&quot;</span>
+                    <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(
+                        <span class="string">&quot;after this many of the commands on the \
+                         shard will no longer work&quot;</span>
                     );
                 }
             };
@@ -1043,7 +1033,7 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resume</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;[resume] Resume started!&quot;</span>);
+        <span class="ident">tracing</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;resuming shard {:?}&quot;</span>, <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>());
         <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">set_stage</span>(<span class="ident">Stage</span>::<span class="ident">Resuming</span>);
         <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">stop_heartbeater</span>().<span class="kw">await</span>;
 
@@ -1052,7 +1042,7 @@
         <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">id</span>().<span class="kw">await</span> {
             <span class="ident">id</span>
         } <span class="kw">else</span> {
-            <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Was not able to get the id, reconnecting.&quot;</span>);
+            <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;session id unavailable, reconnecting&quot;</span>);
             <span class="self">self</span>.<span class="ident">reconnect</span>(<span class="bool-val">true</span>).<span class="kw">await</span>;
             <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
         };
@@ -1068,13 +1058,13 @@
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">send</span>(<span class="ident">payload</span>) {
             <span class="prelude-val">Ok</span>(()) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(()),
             <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">PayloadSerialization</span> { <span class="ident">source</span> }) <span class="op">=&gt;</span> {
-                <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Failed to serialize message to send: {:?}&quot;</span>, <span class="ident">source</span>);
+                <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;serializing message to send failed: {:?}&quot;</span>, <span class="ident">source</span>);
 
                 <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">PayloadSerialization</span> { <span class="ident">source</span> })
             }
             <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">SendingMessage</span> { <span class="ident">source</span> }) <span class="op">=&gt;</span> {
-                <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Failed to send message: {:?}&quot;</span>, <span class="ident">source</span>);
-                <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Reconnecting&quot;</span>);
+                <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;sending message failed: {:?}&quot;</span>, <span class="ident">source</span>);
+                <span class="ident">tracing</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;reconnecting shard {:?}&quot;</span>, <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>());
 
                 <span class="self">self</span>.<span class="ident">reconnect</span>(<span class="bool-val">true</span>).<span class="kw">await</span>;
 
@@ -1104,7 +1094,7 @@
                 <span class="ident">msg</span>
             } <span class="kw">else</span> {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">why</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">resume</span>().<span class="kw">await</span> {
-                    <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Resume failed with {}, reconnecting&quot;</span>, <span class="ident">why</span>);
+                    <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;resuming failed, reconnecting: {:?}&quot;</span>, <span class="ident">why</span>);
                     <span class="self">self</span>.<span class="ident">reconnect</span>(<span class="bool-val">true</span>).<span class="kw">await</span>;
                 }
                 <span class="kw">continue</span>;
@@ -1133,7 +1123,7 @@
                     <span class="kw">break</span> <span class="ident">msg_or_error</span>;
                 }
                 <span class="ident">Message</span>::<span class="ident">Close</span>(<span class="ident">close_frame</span>) <span class="op">=&gt;</span> {
-                    <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Got close code: {:?}.&quot;</span>, <span class="ident">close_frame</span>);
+                    <span class="ident">tracing</span>::<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;got close code: {:?}&quot;</span>, <span class="ident">close_frame</span>);
                     <span class="ident">emit</span>::<span class="ident">event</span>(
                         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">listeners</span>,
                         <span class="ident">Event</span>::<span class="ident">ShardDisconnected</span>(<span class="ident">Disconnected</span> {
@@ -1173,7 +1163,7 @@
                 }
                 <span class="ident">Message</span>::<span class="ident">Ping</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Message</span>::<span class="ident">Pong</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {}
                 <span class="ident">Message</span>::<span class="ident">Text</span>(<span class="kw-2">mut</span> <span class="ident">text</span>) <span class="op">=&gt;</span> {
-                    <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Text payload: {}&quot;</span>, <span class="ident">text</span>);
+                    <span class="ident">tracing</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;text payload: {}&quot;</span>, <span class="ident">text</span>);
 
                     <span class="ident">emit</span>::<span class="ident">bytes</span>(<span class="self">self</span>.<span class="ident">listeners</span>.<span class="ident">clone</span>(), <span class="ident">text</span>.<span class="ident">as_bytes</span>()).<span class="kw">await</span>;
 
@@ -1194,7 +1184,7 @@
             .<span class="kw">await</span>
             .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">Connecting</span> { <span class="ident">source</span> })<span class="question-mark">?</span>;
 
-        <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Shook hands with remote&quot;</span>);
+        <span class="ident">tracing</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Shook hands with remote&quot;</span>);
 
         <span class="prelude-val">Ok</span>(<span class="ident">stream</span>)
     }
@@ -1230,7 +1220,7 @@
         <span class="ident">gateway_deserializer</span>
             .<span class="ident">deserialize</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">json_deserializer</span>)
             .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> {
-                <span class="ident">tracing</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Broken JSON: {}&quot;</span>, <span class="ident">json</span>);
+                <span class="ident">tracing</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;invalid JSON: {}&quot;</span>, <span class="ident">json</span>);
 
                 <span class="ident">Error</span>::<span class="ident">PayloadSerialization</span> { <span class="ident">source</span> }
             })
@@ -1269,7 +1259,7 @@
         <span class="ident">gateway_deserializer</span>
             .<span class="ident">deserialize</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">json_deserializer</span>)
             .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> {
-                <span class="ident">tracing</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Broken JSON: {}&quot;</span>, <span class="ident">json</span>);
+                <span class="ident">tracing</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;invalid JSON: {}&quot;</span>, <span class="ident">json</span>);
 
                 <span class="ident">Error</span>::<span class="ident">PayloadSerialization</span> { <span class="ident">source</span> }
             })

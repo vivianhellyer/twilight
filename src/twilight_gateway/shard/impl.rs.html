@@ -364,6 +364,7 @@
 <span id="364">364</span>
 <span id="365">365</span>
 <span id="366">366</span>
+<span id="367">367</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">config</span>::<span class="ident">ShardConfig</span>,
@@ -385,7 +386,6 @@
     <span class="ident">sync</span>::{<span class="ident">atomic</span>::<span class="ident">Ordering</span>, <span class="ident">Arc</span>},
 };
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">sync</span>::<span class="ident">watch</span>::<span class="ident">Receiver</span> <span class="kw">as</span> <span class="ident">WatchReceiver</span>;
-<span class="kw">use</span> <span class="ident">tracing</span>::<span class="ident">debug</span>;
 <span class="kw">use</span> <span class="ident">twilight_model</span>::<span class="ident">gateway</span>::<span class="ident">event</span>::<span class="ident">Event</span>;
 
 <span class="doccomment">/// Information about a shard, including its latency, current session sequence,</span>
@@ -428,7 +428,7 @@
     <span class="doccomment">/// For example, once a shard is fully booted then it will be</span>
     <span class="doccomment">/// [`Connected`].</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`Connected`]: enum.Stage.html</span>
+    <span class="doccomment">/// [`Connected`]: stage/enum.Stage.html#variant.Connected</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stage</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Stage</span> {
         <span class="self">self</span>.<span class="ident">stage</span>
     }
@@ -500,7 +500,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Errors if the `ShardProcessor` could not be started.</span>
+    <span class="doccomment">/// Errors if the shard&#39;s processor could not be started.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">start</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="number">0</span>
@@ -522,7 +522,7 @@
         <span class="ident">tokio</span>::<span class="ident">spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">fut</span>.<span class="kw">await</span>;
 
-            <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[Shard] Shard processor future ended&quot;</span>);
+            <span class="ident">tracing</span>::<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;shard processor future ended&quot;</span>);
         });
 
         <span class="comment">// We know that these haven&#39;t been set, so we can ignore this.</span>
@@ -539,10 +539,10 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The returned event stream implements [`futures::stream::Stream`].</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// All event types except for [`EventType::SHARD_PAYLOAD`] are enabled.</span>
+    <span class="doccomment">/// All event types except for [`EventType::ShardPayload`] are enabled.</span>
     <span class="doccomment">/// If you need to enable it, consider calling [`some_events`] instead.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`EventType::SHARD_PAYLOAD`]: events/struct.EventType.html#const.SHARD_PAYLOAD</span>
+    <span class="doccomment">/// [`EventType::ShardPayload`]: ../../twilight_model/gateway/event/enum.EventType.html#variant.ShardPayload</span>
     <span class="doccomment">/// [`futures::stream::Stream`]: https://docs.rs/futures/*/futures/stream/trait.Stream.html</span>
     <span class="doccomment">/// [`some_events`]: #method.some_events</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">events</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Events</span> {
@@ -584,6 +584,8 @@
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// [`Event::ShardConnected`]: ../../twilight_model/gateway/event/enum.Event.html#variant.ShardConnected</span>
+    <span class="doccomment">/// [`Event::ShardDisconnected`]: ../../twilight_model/gateway/event/enum.Event.html#variant.ShardDisconnected</span>
     <span class="doccomment">/// [`futures::stream::Stream`]: https://docs.rs/futures/*/futures/stream/trait.Stream.html</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">some_events</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">event_types</span>: <span class="ident">EventTypeFlags</span>) <span class="op">-&gt;</span> <span class="ident">Events</span> {
         <span class="kw">let</span> <span class="ident">rx</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">listeners</span>.<span class="ident">add</span>(<span class="ident">event_types</span>);
@@ -596,9 +598,9 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns [`Error::Shutdown`] if the shard isn&#39;t actively running.</span>
+    <span class="doccomment">/// Returns [`Error::Stopped`] if the shard isn&#39;t actively running.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`Error::Shutdown`]: error/enum.Error.html</span>
+    <span class="doccomment">/// [`Error::Stopped`]: error/enum.Error.html#variant.Stopped</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Information</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">session</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">session</span>()<span class="question-mark">?</span>;
 
@@ -620,9 +622,9 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns [`Error::Shutdown`] if the shard isn&#39;t actively running.</span>
+    <span class="doccomment">/// Returns [`Error::Stopped`] if the shard isn&#39;t actively running.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`Error::Shutdown`]: error/enum.Error.html</span>
+    <span class="doccomment">/// [`Error::Stopped`]: error/enum.Error.html#variant.Stopped</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">session</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Session</span><span class="op">&gt;&gt;</span> {
         <span class="kw">let</span> <span class="ident">session</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">session</span>.<span class="ident">get</span>().<span class="ident">ok_or</span>(<span class="ident">Error</span>::<span class="ident">Stopped</span>)<span class="question-mark">?</span>;
 
@@ -640,9 +642,9 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns [`Error::Shutdown`] if the shard isn&#39;t actively running.</span>
+    <span class="doccomment">/// Returns [`Error::Stopped`] if the shard isn&#39;t actively running.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`Error::Shutdown`]: error/enum.Error.html</span>
+    <span class="doccomment">/// [`Error::Stopped`]: error/enum.Error.html#variant.Stopped</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sink</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ShardSink</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">session</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">session</span>()<span class="question-mark">?</span>;
 
@@ -655,9 +657,9 @@
     <span class="doccomment">/// Fails if command could not be serialized, or if the command could</span>
     <span class="doccomment">/// not be sent.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns [`Error::Shutdown`] if the shard isn&#39;t actively running.</span>
+    <span class="doccomment">/// Returns [`Error::Stopped`] if the shard isn&#39;t actively running.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`Error::Shutdown`]: error/enum.Error.html</span>
+    <span class="doccomment">/// [`Error::Stopped`]: error/enum.Error.html#variant.Stopped</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">command</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">com</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">serde</span>::<span class="ident">Serialize</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">Message</span>::<span class="ident">Text</span>(
             <span class="kw">crate</span>::<span class="ident">json_to_string</span>(<span class="kw-2">&amp;</span><span class="ident">com</span>)
