@@ -783,6 +783,7 @@
 <span id="783">783</span>
 <span id="784">784</span>
 <span id="785">785</span>
+<span id="786">786</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">config</span>::<span class="ident">EventType</span>, <span class="ident">InMemoryCache</span>, <span class="ident">InMemoryCacheError</span>};
 <span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
@@ -1196,6 +1197,7 @@
 
         <span class="ident">member</span>.<span class="ident">nick</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">nick</span>.<span class="ident">clone</span>();
         <span class="ident">member</span>.<span class="ident">roles</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">roles</span>.<span class="ident">clone</span>();
+        <span class="ident">member</span>.<span class="ident">joined_at</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">joined_at</span>.<span class="ident">clone</span>());
 
         <span class="prelude-val">Ok</span>(())
     }
