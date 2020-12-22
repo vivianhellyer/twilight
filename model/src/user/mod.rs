@@ -16,37 +16,45 @@ use crate::id::UserId;
 use serde::{Deserialize, Serialize};
 use serde_mappable_seq::Key;
 
-mod discriminator {
+pub(super) mod discriminator {
     use serde::{
         de::{Deserializer, Error as DeError, Visitor},
         ser::Serializer,
     };
-    use std::fmt::{Formatter, Result as FmtResult};
+    use std::{
+        convert::TryInto,
+        fmt::{Formatter, Result as FmtResult},
+    };
 
     struct DiscriminatorVisitor;
 
     impl<'de> Visitor<'de> for DiscriminatorVisitor {
-        type Value = String;
+        type Value = u16;
 
         fn expecting(&self, f: &mut Formatter<'_>) -> FmtResult {
             f.write_str("string or integer discriminator")
         }
 
+        fn visit_u16<E: DeError>(self, value: u16) -> Result<Self::Value, E> {
+            Ok(value)
+        }
+
         fn visit_u64<E: DeError>(self, value: u64) -> Result<Self::Value, E> {
-            Ok(format!("{:04}", value))
+            value.try_into().map_err(E::custom)
         }
 
         fn visit_str<E: DeError>(self, value: &str) -> Result<Self::Value, E> {
-            Ok(value.to_owned())
+            value.parse().map_err(E::custom)
         }
     }
 
-    pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<String, D::Error> {
+    pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<u16, D::Error> {
         deserializer.deserialize_any(DiscriminatorVisitor)
     }
 
-    pub fn serialize<S: Serializer>(value: &str, serializer: S) -> Result<S::Ok, S::Error> {
-        serializer.collect_str(value)
+    #[allow(clippy::clippy::trivially_copy_pass_by_ref)]
+    pub fn serialize<S: Serializer>(value: &u16, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.collect_str(&format_args!("{:04}", value))
     }
 }
 
@@ -63,7 +71,7 @@ pub struct User {
     /// integer. The field will always serialize into a string due to that being
     /// the type Discord's API uses.
     #[serde(with = "discriminator")]
-    pub discriminator: String,
+    pub discriminator: u16,
     pub email: Option<String>,
     pub flags: Option<UserFlags>,
     pub id: UserId,
@@ -138,7 +146,7 @@ mod tests {
         let value = User {
             avatar: Some("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa".to_owned()),
             bot: false,
-            discriminator: "0001".to_owned(),
+            discriminator: 1,
             email: Some("address@example.com".to_owned()),
             flags: Some(UserFlags::EARLY_SUPPORTER | UserFlags::VERIFIED_BOT_DEVELOPER),
             id: UserId(1),
@@ -151,13 +159,11 @@ mod tests {
             verified: Some(true),
         };
 
-        // Deserializing a user with a string discriminator (which Discord
-        // provides)
+        // Deserializing a user with a string discriminator.
         serde_test::assert_tokens(&value, &user_tokens(Token::Str("0001")));
 
-        // Deserializing a user with an integer discriminator. Userland code
-        // may have this due to being a more compact memory representation of a
-        // discriminator.
-        serde_test::assert_de_tokens(&value, &user_tokens(Token::U64(1)));
+        // Deserializing a user with an integer discriminator (which Discord
+        // does not provide).
+        serde_test::assert_de_tokens(&value, &user_tokens(Token::U16(1)));
     }
 }

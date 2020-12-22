@@ -1,7 +1,7 @@
 use crate::{
     id::{ChannelId, GuildId, UserId},
     invite::TargetUserType,
-    user::User,
+    user::{self, User},
 };
 use serde::{Deserialize, Serialize};
 
@@ -23,7 +23,15 @@ pub struct InviteCreate {
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct PartialUser {
     avatar: Option<String>,
-    discriminator: String,
+    /// Discriminator used to differentiate people with the same username.
+    ///
+    /// # serde
+    ///
+    /// The discriminator field can be deserialized from either a string or an
+    /// integer. The field will always serialize into a string due to that being
+    /// the type Discord's API uses.
+    #[serde(with = "user::discriminator")]
+    discriminator: u16,
     id: UserId,
     username: String,
 }

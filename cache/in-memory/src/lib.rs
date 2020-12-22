@@ -938,7 +938,7 @@ mod tests {
         CurrentUser {
             avatar: None,
             bot: true,
-            discriminator: "9876".to_owned(),
+            discriminator: 9876,
             email: None,
             id: UserId(id),
             mfa_enabled: true,
@@ -996,7 +996,7 @@ mod tests {
         User {
             avatar: None,
             bot: false,
-            discriminator: "0001".to_owned(),
+            discriminator: 1,
             email: None,
             flags: None,
             id,

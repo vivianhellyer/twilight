@@ -22,7 +22,7 @@ pub struct CurrentUser {
     /// integer. The field will always serialize into a string due to that being
     /// the type Discord's API uses.
     #[serde(with = "super::discriminator")]
-    pub discriminator: String,
+    pub discriminator: u16,
     /// User's email address associated to the account.
     ///
     /// Requires the `email` oauth scope. See [Discord's documentation] for
@@ -104,7 +104,7 @@ mod tests {
         let value = CurrentUser {
             avatar: Some("avatar hash".to_owned()),
             bot: true,
-            discriminator: "9999".to_owned(),
+            discriminator: 9999,
             email: None,
             id: UserId(1),
             mfa_enabled: true,

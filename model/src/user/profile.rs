@@ -17,7 +17,7 @@ pub struct UserProfile {
     /// integer. The field will always serialize into a string due to that being
     /// the type Discord's API uses.
     #[serde(with = "super::discriminator")]
-    pub discriminator: String,
+    pub discriminator: u16,
     pub email: Option<String>,
     pub flags: Option<UserFlags>,
     pub id: UserId,
@@ -79,7 +79,7 @@ mod tests {
         let value = UserProfile {
             avatar: Some("hash".to_owned()),
             bot: false,
-            discriminator: "0004".to_owned(),
+            discriminator: 4,
             email: Some("email@example.com".to_owned()),
             flags: Some(UserFlags::VERIFIED_BOT_DEVELOPER),
             id: UserId(1),
