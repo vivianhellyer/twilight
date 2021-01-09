@@ -11,14 +11,14 @@ use std::{
     fmt::Debug,
     future::Future,
     pin::Pin,
-    time::{UNIX_EPOCH, Duration, Instant, SystemTime},
+    // time::{UNIX_EPOCH, Duration, Instant, SystemTime},
 };
 
 pub struct Bucket {
     limit: u64,
     remaining: u64,
     reset_after: u64,
-    started_at: u64,
+    // started_at: u64,
 }
 
 impl Bucket {
@@ -38,27 +38,27 @@ impl Bucket {
         self.reset_after
     }
 
-    /// When the bucket's ratelimit refresh countdown started in milliseconds
-    /// from the Unix epoch.
-    pub fn started_at(&self) -> u64 {
-        self.started_at
-    }
+    // /// When the bucket's ratelimit refresh countdown started in milliseconds
+    // /// from the Unix epoch.
+    // pub fn started_at(&self) -> u64 {
+    //     self.started_at
+    // }
 
-    /// How long until the bucket will refresh.
-    ///
-    /// May return `None` when the system clock is before the Unix epoch or
-    /// the bucket has already refreshed.
-    pub fn time_remaining(&self) -> Option<Duration> {
-        let since_epoch = SystemTime::now().duration_since(UNIX_EPOCH).ok()?.as_millis();
-        let reset_after = self.reset_after();
-        let elapsed = started_at.elapsed();
+    // /// How long until the bucket will refresh.
+    // ///
+    // /// May return `None` when the system clock is before the Unix epoch or
+    // /// the bucket has already refreshed.
+    // pub fn time_remaining(&self) -> Option<Duration> {
+    //     let since_epoch = SystemTime::now().duration_since(UNIX_EPOCH).ok()?.as_millis();
+    //     let reset_after = self.reset_after();
+    //     let elapsed = started_at.elapsed();
 
-        if elapsed > Duration::from_millis(reset_after) {
-            return None;
-        }
+    //     if elapsed > Duration::from_millis(reset_after) {
+    //         return None;
+    //     }
 
-        Some(Duration::from_millis(reset_after) - elapsed)
-    }
+    //     Some(Duration::from_millis(reset_after) - elapsed)
+    // }
 }
 
 pub trait Ratelimiter: Debug + Send + Sync {

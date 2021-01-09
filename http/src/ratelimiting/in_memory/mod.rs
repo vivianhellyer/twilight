@@ -89,13 +89,13 @@ impl InMemoryRatelimiter {
 impl Ratelimiter for InMemoryRatelimiter {
     fn bucket(&self, path: &Path) -> Pin<Box<dyn Future<Output = Result<Option<InfoBucket>, Box<dyn Error + Send + Sync + 'static>>> + Send + 'static>> {
         if let Some(bucket) = self.buckets.lock().unwrap().get(path) {
-            let started_at = bucket.started_at.lock().unwrap();
+            // let started_at = bucket.started_at.lock().unwrap();
 
             Box::pin(future::ok(Some(InfoBucket {
                 limit: bucket.limit(),
                 remaining: bucket.remaining(),
                 reset_after: bucket.reset_after(),
-                started_at: *started_at,
+                // started_at: *started_at,
             })))
         } else {
             Box::pin(future::ok(None))
