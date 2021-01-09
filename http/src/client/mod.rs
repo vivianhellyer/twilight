@@ -5,7 +5,7 @@ pub use self::builder::ClientBuilder;
 use crate::{
     api_error::{ApiError, ErrorCode},
     error::{Error, Result},
-    ratelimiting::{RatelimitHeaders, Ratelimiter},
+    ratelimiting::{headers::Headers as RatelimitHeaders, InMemoryRatelimiter, Ratelimiter},
     request::{
         channel::allowed_mentions::AllowedMentions,
         guild::{create_guild::CreateGuildError, create_guild_channel::CreateGuildChannelError},
@@ -46,7 +46,7 @@ type HttpsConnector<T> = hyper_tls::HttpsConnector<T>;
 struct State {
     http: HyperClient<HttpsConnector<HttpConnector>, Body>,
     proxy: Option<Box<str>>,
-    ratelimiter: Option<Ratelimiter>,
+    ratelimiter: Option<Box<dyn Ratelimiter>>,
     timeout: Duration,
     token_invalid: AtomicBool,
     token: Option<Box<str>>,
@@ -143,7 +143,7 @@ impl Client {
             state: Arc::new(State {
                 http: HyperClient::builder().build(connector),
                 proxy: None,
-                ratelimiter: Some(Ratelimiter::new()),
+                ratelimiter: Some(Box::new(InMemoryRatelimiter::new())),
                 timeout: Duration::from_secs(10),
                 token_invalid: AtomicBool::new(false),
                 token: Some(token.into_boxed_str()),
@@ -181,8 +181,8 @@ impl Client {
     ///
     /// This will return `None` only if ratelimit handling
     /// has been explicitly disabled in the [`ClientBuilder`].
-    pub fn ratelimiter(&self) -> Option<Ratelimiter> {
-        self.state.ratelimiter.clone()
+    pub fn ratelimiter(&self) -> Option<&Box<(dyn Ratelimiter + 'static)>> {
+        self.state.ratelimiter.as_ref()
     }
 
     /// Get the audit log for a guild.
@@ -1524,7 +1524,7 @@ impl Client {
             }
         };
 
-        let rx = ratelimiter.get(bucket).await;
+        let rx = ratelimiter.ticket(bucket).await.unwrap();
         let tx = rx
             .await
             .map_err(|source| Error::RequestCanceled { source })?;
@@ -1543,12 +1543,12 @@ impl Client {
 
         match RatelimitHeaders::try_from(resp.headers()) {
             Ok(v) => {
-                let _ = tx.send(Some(v));
+                let _ = tx.headers(Some(v));
             }
             Err(why) => {
                 tracing::warn!("header parsing failed: {:?}; {:?}", why, resp);
 
-                let _ = tx.send(None);
+                let _ = tx.headers(None);
             }
         }
 
@@ -1654,7 +1654,7 @@ impl From<HyperClient<HttpsConnector<HttpConnector>>> for Client {
             state: Arc::new(State {
                 http: hyper_client,
                 proxy: None,
-                ratelimiter: Some(Ratelimiter::new()),
+                ratelimiter: Some(Box::new(InMemoryRatelimiter::new())),
                 timeout: Duration::from_secs(10),
                 token_invalid: AtomicBool::new(false),
                 token: None,

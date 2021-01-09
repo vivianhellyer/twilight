@@ -1,4 +1,4 @@
-use crate::{api_error::ApiError, ratelimiting::RatelimitError};
+use crate::api_error::ApiError;
 use futures_channel::oneshot::Canceled;
 use hyper::{
     header::InvalidHeaderValue, http::Error as HttpError, Body, Error as HyperError, Response,
@@ -42,7 +42,7 @@ pub enum Error {
         source: JsonError,
     },
     Ratelimiting {
-        source: RatelimitError,
+        source: (),
     },
     RequestCanceled {
         source: Canceled,
@@ -124,7 +124,7 @@ impl StdError for Error {
             Self::CreatingHeader { source, .. } => Some(source),
             Self::Formatting { source } => Some(source),
             Self::Json { source } | Self::Parsing { source, .. } => Some(source),
-            Self::Ratelimiting { source } => Some(source),
+            Self::Ratelimiting { .. } => None,
             Self::RequestCanceled { source } => Some(source),
             Self::ChunkingResponse { source } | Self::RequestError { source } => Some(source),
             Self::RequestTimedOut { source } => Some(source),

@@ -1,15 +1,13 @@
-use super::{headers::RatelimitHeaders, GlobalLockPair};
+use super::{super::{headers::Headers, ticket::TicketNotifier}, GlobalLockPair};
 use crate::routing::Path;
-use futures_channel::{
-    mpsc::{self, UnboundedReceiver, UnboundedSender},
-    oneshot::{self, Sender},
-};
-use futures_util::{lock::Mutex, stream::StreamExt};
+use futures_channel::mpsc::{self, UnboundedReceiver, UnboundedSender};
+use futures_util::{lock::Mutex as AsyncMutex, stream::StreamExt};
 use std::{
     collections::HashMap,
     sync::{
         atomic::{AtomicU64, Ordering},
         Arc,
+        Mutex,
     },
     time::{Duration, Instant},
 };
@@ -56,9 +54,9 @@ impl Bucket {
         self.reset_after.load(Ordering::Relaxed)
     }
 
-    pub async fn time_remaining(&self) -> TimeRemaining {
+    pub fn time_remaining(&self) -> TimeRemaining {
         let reset_after = self.reset_after();
-        let started_at = match *self.started_at.lock().await {
+        let started_at = match *self.started_at.lock().unwrap() {
             Some(v) => v,
             None => return TimeRemaining::NotStarted,
         };
@@ -71,14 +69,14 @@ impl Bucket {
         TimeRemaining::Some(Duration::from_millis(reset_after) - elapsed)
     }
 
-    pub async fn try_reset(&self) -> bool {
-        if self.started_at.lock().await.is_none() {
+    pub fn try_reset(&self) -> bool {
+        if self.started_at.lock().unwrap().is_none() {
             return false;
         }
 
-        if let TimeRemaining::Finished = self.time_remaining().await {
+        if let TimeRemaining::Finished = self.time_remaining() {
             self.remaining.store(self.limit(), Ordering::Relaxed);
-            *self.started_at.lock().await = None;
+            *self.started_at.lock().unwrap() = None;
 
             true
         } else {
@@ -86,11 +84,11 @@ impl Bucket {
         }
     }
 
-    pub async fn update(&self, ratelimits: Option<(u64, u64, u64)>) {
+    pub fn update(&self, ratelimits: Option<(u64, u64, u64)>) {
         let bucket_limit = self.limit();
 
         {
-            let mut started_at = self.started_at.lock().await;
+            let mut started_at = self.started_at.lock().unwrap();
 
             if started_at.is_none() {
                 started_at.replace(Instant::now());
@@ -112,28 +110,25 @@ impl Bucket {
 
 #[derive(Debug)]
 pub struct BucketQueue {
-    rx: Mutex<UnboundedReceiver<Sender<Sender<Option<RatelimitHeaders>>>>>,
-    tx: UnboundedSender<Sender<Sender<Option<RatelimitHeaders>>>>,
+    rx: AsyncMutex<UnboundedReceiver<TicketNotifier>>,
+    tx: UnboundedSender<TicketNotifier>,
 }
 
 impl BucketQueue {
-    pub fn push(&self, tx: Sender<Sender<Option<RatelimitHeaders>>>) {
+    pub fn push(&self, tx: TicketNotifier) {
         let _ = self.tx.unbounded_send(tx);
     }
 
     pub async fn pop(
         &self,
         timeout_duration: Duration,
-    ) -> Option<Sender<Sender<Option<RatelimitHeaders>>>> {
+    ) -> Option<TicketNotifier> {
         let mut rx = self.rx.lock().await;
 
-        match timeout(timeout_duration, StreamExt::next(&mut *rx))
+        timeout(timeout_duration, StreamExt::next(&mut *rx))
             .await
             .ok()
-        {
-            Some(x) => x,
-            None => None,
-        }
+            .flatten()
     }
 }
 
@@ -142,7 +137,7 @@ impl Default for BucketQueue {
         let (tx, rx) = mpsc::unbounded();
 
         Self {
-            rx: Mutex::new(rx),
+            rx: AsyncMutex::new(rx),
             tx,
         }
     }
@@ -176,18 +171,19 @@ impl BucketQueueTask {
         let span = tracing::debug_span!("background queue task", path=?self.path);
 
         while let Some(queue_tx) = self.next().await {
-            let (tx, rx) = oneshot::channel();
-
             if self.global.is_locked() {
                 self.global.0.lock().await;
             }
 
-            let _ = queue_tx.send(tx);
+            let ticket_headers = match queue_tx.available() {
+                Some(ticket_headers) => ticket_headers,
+                None => continue,
+            };
 
             tracing::debug!(parent: &span, "starting to wait for response headers",);
 
             // TODO: Find a better way of handling nested types.
-            match timeout(Self::WAIT, rx).await {
+            match timeout(Self::WAIT, ticket_headers).await {
                 Ok(Ok(Some(headers))) => self.handle_headers(&headers).await,
                 // - None was sent through the channel (request aborted)
                 // - channel was closed
@@ -200,18 +196,18 @@ impl BucketQueueTask {
 
         tracing::debug!(parent: &span, "bucket appears finished, removing");
 
-        self.buckets.lock().await.remove(&self.path);
+        self.buckets.lock().unwrap().remove(&self.path);
     }
 
-    async fn handle_headers(&self, headers: &RatelimitHeaders) {
+    async fn handle_headers(&self, headers: &Headers) {
         let ratelimits = match headers {
-            RatelimitHeaders::GlobalLimited { reset_after } => {
+            Headers::GlobalLimited { reset_after } => {
                 self.lock_global(*reset_after).await;
 
                 None
             }
-            RatelimitHeaders::None => return,
-            RatelimitHeaders::Present {
+            Headers::None => return,
+            Headers::Present {
                 global,
                 limit,
                 remaining,
@@ -227,7 +223,7 @@ impl BucketQueueTask {
         };
 
         tracing::debug!(path=?self.path, "updating bucket");
-        self.bucket.update(ratelimits).await;
+        self.bucket.update(ratelimits);
     }
 
     async fn lock_global(&self, wait: u64) {
@@ -240,7 +236,7 @@ impl BucketQueueTask {
         drop(lock);
     }
 
-    async fn next(&self) -> Option<Sender<Sender<Option<RatelimitHeaders>>>> {
+    async fn next(&self) -> Option<TicketNotifier> {
         tracing::debug!(path=?self.path, "starting to get next in queue");
 
         self.wait_if_needed().await;
@@ -258,9 +254,9 @@ impl BucketQueueTask {
 
             tracing::debug!(parent: &span, "0 tickets remaining, may have to wait");
 
-            match self.bucket.time_remaining().await {
+            match self.bucket.time_remaining() {
                 TimeRemaining::Finished => {
-                    self.bucket.try_reset().await;
+                    self.bucket.try_reset();
 
                     return;
                 }
@@ -279,6 +275,6 @@ impl BucketQueueTask {
 
         tracing::debug!(parent: &span, "done waiting for ratelimit to pass");
 
-        self.bucket.try_reset().await;
+        self.bucket.try_reset();
     }
 }

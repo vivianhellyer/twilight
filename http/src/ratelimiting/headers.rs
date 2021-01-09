@@ -1,10 +1,85 @@
-use super::error::{RatelimitError, RatelimitResult};
-use hyper::header::{HeaderMap, HeaderValue};
-use std::convert::TryFrom;
+use hyper::header::{HeaderMap, HeaderValue, ToStrError};
+use std::{
+    convert::TryFrom,
+    error::Error as StdError,
+    fmt::{Display, Formatter, Result as FmtResult},
+    num::{ParseFloatError, ParseIntError},
+    str::ParseBoolError,
+};
+
+#[derive(Debug)]
+#[non_exhaustive]
+pub enum HeaderParseError {
+    NoHeaders,
+    HeaderMissing {
+        name: &'static str,
+    },
+    HeaderNotUtf8 {
+        name: &'static str,
+        source: ToStrError,
+        value: Vec<u8>,
+    },
+    ParsingBoolText {
+        name: &'static str,
+        source: ParseBoolError,
+        text: String,
+    },
+    ParsingFloatText {
+        name: &'static str,
+        source: ParseFloatError,
+        text: String,
+    },
+    ParsingIntText {
+        name: &'static str,
+        source: ParseIntError,
+        text: String,
+    },
+}
+
+impl Display for HeaderParseError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        match self {
+            Self::NoHeaders => f.write_str("No headers are present"),
+            Self::HeaderMissing { name } => {
+                write!(f, "At least one header, {:?}, is missing", name)
+            }
+            Self::HeaderNotUtf8 { name, value, .. } => {
+                write!(f, "The header {:?} has invalid UTF-16: {:?}", name, value)
+            }
+            Self::ParsingBoolText { name, text, .. } => write!(
+                f,
+                "The header {:?} should be a bool but isn't: {:?}",
+                name, text
+            ),
+            Self::ParsingFloatText { name, text, .. } => write!(
+                f,
+                "The header {:?} should be a float but isn't: {:?}",
+                name, text
+            ),
+            Self::ParsingIntText { name, text, .. } => write!(
+                f,
+                "The header {:?} should be an integer but isn't: {:?}",
+                name, text
+            ),
+        }
+    }
+}
+
+impl StdError for HeaderParseError {
+    fn source(&self) -> Option<&(dyn StdError + 'static)> {
+        match self {
+            Self::HeaderNotUtf8 { source, .. } => Some(source),
+            Self::ParsingBoolText { source, .. } => Some(source),
+            Self::ParsingFloatText { source, .. } => Some(source),
+            Self::ParsingIntText { source, .. } => Some(source),
+            Self::NoHeaders | Self::HeaderMissing { .. } => None,
+        }
+    }
+}
 
 #[derive(Clone, Debug)]
 #[non_exhaustive]
-pub enum RatelimitHeaders {
+pub enum Headers {
     GlobalLimited {
         reset_after: u64,
     },
@@ -21,20 +96,28 @@ pub enum RatelimitHeaders {
     },
 }
 
-impl RatelimitHeaders {
-    pub fn global(&self) -> bool {
+impl Headers {
+    pub fn is_global(&self) -> bool {
         match self {
             Self::GlobalLimited { .. } => true,
             Self::None => false,
             Self::Present { global, .. } => *global,
         }
     }
+
+    pub fn is_none(&self) -> bool {
+        matches!(self, Headers::None)
+    }
+
+    pub fn is_present(&self) -> bool {
+        matches!(self, Headers::Present { .. })
+    }
 }
 
-impl TryFrom<&'_ HeaderMap<HeaderValue>> for RatelimitHeaders {
-    type Error = RatelimitError;
+impl TryFrom<&'_ HeaderMap<HeaderValue>> for Headers {
+    type Error = HeaderParseError;
 
-    fn try_from(map: &'_ HeaderMap<HeaderValue>) -> RatelimitResult<Self> {
+    fn try_from(map: &'_ HeaderMap<HeaderValue>) -> Result<Self, HeaderParseError> {
         match parse_map(map) {
             Ok(v) => Ok(v),
             Err(why) => {
@@ -82,7 +165,7 @@ impl TryFrom<&'_ HeaderMap<HeaderValue>> for RatelimitHeaders {
 }
 
 #[allow(clippy::cast_possible_truncation)]
-fn parse_map(map: &HeaderMap<HeaderValue>) -> RatelimitResult<RatelimitHeaders> {
+fn parse_map(map: &HeaderMap<HeaderValue>) -> Result<Headers, HeaderParseError> {
     let bucket = header_str(map, "x-ratelimit-bucket")
         .ok()
         .map(ToOwned::to_owned);
@@ -96,7 +179,7 @@ fn parse_map(map: &HeaderMap<HeaderValue>) -> RatelimitResult<RatelimitHeaders> 
     #[allow(clippy::cast_sign_loss)]
     let reset_after = (reset_after * 1000.).ceil() as u64;
 
-    Ok(RatelimitHeaders::Present {
+    Ok(Headers::Present {
         bucket,
         global,
         limit,
@@ -106,14 +189,14 @@ fn parse_map(map: &HeaderMap<HeaderValue>) -> RatelimitResult<RatelimitHeaders> 
     })
 }
 
-fn header_bool(map: &HeaderMap<HeaderValue>, name: &'static str) -> RatelimitResult<bool> {
+fn header_bool(map: &HeaderMap<HeaderValue>, name: &'static str) -> Result<bool, HeaderParseError> {
     let value = map
         .get(name)
-        .ok_or(RatelimitError::HeaderMissing { name })?;
+        .ok_or(HeaderParseError::HeaderMissing { name })?;
 
     let text = value
         .to_str()
-        .map_err(|source| RatelimitError::HeaderNotUtf8 {
+        .map_err(|source| HeaderParseError::HeaderNotUtf8 {
             name,
             source,
             value: value.as_bytes().to_owned(),
@@ -121,7 +204,7 @@ fn header_bool(map: &HeaderMap<HeaderValue>, name: &'static str) -> RatelimitRes
 
     let end = text
         .parse()
-        .map_err(|source| RatelimitError::ParsingBoolText {
+        .map_err(|source| HeaderParseError::ParsingBoolText {
             name,
             source,
             text: text.to_owned(),
@@ -130,14 +213,14 @@ fn header_bool(map: &HeaderMap<HeaderValue>, name: &'static str) -> RatelimitRes
     Ok(end)
 }
 
-fn header_float(map: &HeaderMap<HeaderValue>, name: &'static str) -> RatelimitResult<f64> {
+fn header_float(map: &HeaderMap<HeaderValue>, name: &'static str) -> Result<f64, HeaderParseError> {
     let value = map
         .get(name)
-        .ok_or(RatelimitError::HeaderMissing { name })?;
+        .ok_or(HeaderParseError::HeaderMissing { name })?;
 
     let text = value
         .to_str()
-        .map_err(|source| RatelimitError::HeaderNotUtf8 {
+        .map_err(|source| HeaderParseError::HeaderNotUtf8 {
             name,
             source,
             value: value.as_bytes().to_owned(),
@@ -145,7 +228,7 @@ fn header_float(map: &HeaderMap<HeaderValue>, name: &'static str) -> RatelimitRe
 
     let end = text
         .parse()
-        .map_err(|source| RatelimitError::ParsingFloatText {
+        .map_err(|source| HeaderParseError::ParsingFloatText {
             name,
             source,
             text: text.to_owned(),
@@ -154,14 +237,14 @@ fn header_float(map: &HeaderMap<HeaderValue>, name: &'static str) -> RatelimitRe
     Ok(end)
 }
 
-fn header_int(map: &HeaderMap<HeaderValue>, name: &'static str) -> RatelimitResult<u64> {
+fn header_int(map: &HeaderMap<HeaderValue>, name: &'static str) -> Result<u64, HeaderParseError> {
     let value = map
         .get(name)
-        .ok_or(RatelimitError::HeaderMissing { name })?;
+        .ok_or(HeaderParseError::HeaderMissing { name })?;
 
     let text = value
         .to_str()
-        .map_err(|source| RatelimitError::HeaderNotUtf8 {
+        .map_err(|source| HeaderParseError::HeaderNotUtf8 {
             name,
             source,
             value: value.as_bytes().to_owned(),
@@ -169,7 +252,7 @@ fn header_int(map: &HeaderMap<HeaderValue>, name: &'static str) -> RatelimitResu
 
     let end = text
         .parse()
-        .map_err(|source| RatelimitError::ParsingIntText {
+        .map_err(|source| HeaderParseError::ParsingIntText {
             name,
             source,
             text: text.to_owned(),
@@ -178,14 +261,14 @@ fn header_int(map: &HeaderMap<HeaderValue>, name: &'static str) -> RatelimitResu
     Ok(end)
 }
 
-fn header_str<'a>(map: &'a HeaderMap<HeaderValue>, name: &'static str) -> RatelimitResult<&'a str> {
+fn header_str<'a>(map: &'a HeaderMap<HeaderValue>, name: &'static str) -> Result<&'a str, HeaderParseError> {
     let value = map
         .get(name)
-        .ok_or(RatelimitError::HeaderMissing { name })?;
+        .ok_or(HeaderParseError::HeaderMissing { name })?;
 
     let text = value
         .to_str()
-        .map_err(|source| RatelimitError::HeaderNotUtf8 {
+        .map_err(|source| HeaderParseError::HeaderNotUtf8 {
             name,
             source,
             value: value.as_bytes().to_owned(),

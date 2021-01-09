@@ -1,5 +1,5 @@
 use super::{Client, HttpsConnector, State};
-use crate::{ratelimiting::Ratelimiter, request::channel::allowed_mentions::AllowedMentions};
+use crate::{ratelimiting::{InMemoryRatelimiter, Ratelimiter}, request::channel::allowed_mentions::AllowedMentions};
 use hyper::client::{Client as HyperClient, HttpConnector};
 use std::{
     sync::{atomic::AtomicBool, Arc},
@@ -11,7 +11,7 @@ use std::{
 pub struct ClientBuilder {
     pub(crate) default_allowed_mentions: Option<AllowedMentions>,
     pub(crate) proxy: Option<Box<str>>,
-    pub(crate) ratelimiter: Option<Ratelimiter>,
+    pub(crate) ratelimiter: Option<Box<dyn Ratelimiter>>,
     pub(crate) hyper_client: Option<HyperClient<HttpsConnector<HttpConnector>>>,
     pub(crate) timeout: Duration,
     pub(crate) token: Option<Box<str>>,
@@ -21,7 +21,22 @@ pub struct ClientBuilder {
 impl ClientBuilder {
     /// Create a new builder to create a [`Client`].
     pub fn new() -> Self {
-        Self::default()
+        Self {
+            default_allowed_mentions: None,
+            hyper_client: None,
+            proxy: None,
+            ratelimiter: Some(Box::new(InMemoryRatelimiter::default())),
+            timeout: Duration::from_secs(10),
+            token: None,
+            use_http: false,
+        }
+    }
+
+    pub fn with_ratelimiter(ratelimiter: impl Into<Option<Box<dyn Ratelimiter>>>) -> Self {
+        Self {
+            ratelimiter: ratelimiter.into(),
+            ..Self::new()
+        }
     }
 
     /// Build the [`Client`].
@@ -103,7 +118,7 @@ impl ClientBuilder {
     ///
     /// If this method is not called at all then a default ratelimiter will be
     /// created by [`ClientBuilder::build`].
-    pub fn ratelimiter(mut self, ratelimiter: impl Into<Option<Ratelimiter>>) -> Self {
+    pub fn ratelimiter(mut self, ratelimiter: impl Into<Option<Box<dyn Ratelimiter>>>) -> Self {
         self.ratelimiter = ratelimiter.into();
 
         self
@@ -143,7 +158,7 @@ impl Default for ClientBuilder {
             default_allowed_mentions: None,
             hyper_client: None,
             proxy: None,
-            ratelimiter: Some(Ratelimiter::new()),
+            ratelimiter: Some(Box::new(InMemoryRatelimiter::new())),
             timeout: Duration::from_secs(10),
             token: None,
             use_http: false,
